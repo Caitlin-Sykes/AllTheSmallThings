@@ -1,9 +1,16 @@
 package com.csykes.allthesmallthings;
 
+import com.csykes.allthesmallthings.block.ModBlocks;
+import com.csykes.allthesmallthings.item.ModItems;
+import com.csykes.allthesmallthings.screen.DebarkerScreen;
+import com.csykes.allthesmallthings.container.ModContainer;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.client.gui.ScreenManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.fml.common.Mod;
@@ -15,6 +22,8 @@ import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import com.csykes.allthesmallthings.tileentity.TileEntities;
 
 import java.util.stream.Collectors;
 
@@ -28,14 +37,23 @@ public class AllTheSmallThings
     private static final Logger LOGGER = LogManager.getLogger();
 
     public AllTheSmallThings() {
+
+         // Register the setup method for modloading
+        IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
+
         // Register the setup method for modloading
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
+        eventBus.addListener(this::setup);
         // Register the enqueueIMC method for modloading
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
+        eventBus.addListener(this::enqueueIMC);
         // Register the processIMC method for modloading
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
+        eventBus.addListener(this::processIMC);
         // Register the doClientStuff method for modloading
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
+        eventBus.addListener(this::doClientStuff);
+
+        ModBlocks.register(eventBus);
+        ModItems.register(eventBus);
+        TileEntities.register(eventBus);
+        ModContainer.register(eventBus);
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
@@ -49,7 +67,8 @@ public class AllTheSmallThings
     }
 
     private void doClientStuff(final FMLClientSetupEvent event) {
-        // do something that can only be done on the client
+        ScreenManager.registerFactory(ModContainer.DEBARKER_CONTAINER.get(), DebarkerScreen::new);
+
     }
 
     private void enqueueIMC(final InterModEnqueueEvent event)
