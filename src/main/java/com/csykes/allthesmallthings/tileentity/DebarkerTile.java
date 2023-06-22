@@ -1,10 +1,14 @@
 package com.csykes.allthesmallthings.tileentity;
+
+import com.csykes.allthesmallthings.item.ModItems;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundNBT;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
@@ -102,7 +106,7 @@ public class DebarkerTile extends TileEntity {
 
             //Removes the number of normal logs, replaces with same number of stripped logs.
             this.itemHandler.getStackInSlot(0).shrink(numItems);
-            this.itemHandler.insertItem(1, new ItemStack(Items.STRIPPED_OAK_LOG.getItem()), false);
+            this.itemHandler.insertItem(1, new ItemStack(Items.IRON_AXE), false);
         }
     }
 

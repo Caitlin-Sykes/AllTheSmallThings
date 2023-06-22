@@ -1,6 +1,8 @@
 {
-  "parent": "minecraft:block/cube_all",
+  "parent": "minecraft:block/cube_column",
   "textures": {
-    "all": "allthesmallthings:block/debarker"
+    "side":"allthesmallthings:block/debarker/debarker_side",
+    "up":"allthesmallthings:block/debarker/debarker_top",
+    "down":"allthesmallthings:block/debarker/debarker_bottom"
   }
-}
+  }

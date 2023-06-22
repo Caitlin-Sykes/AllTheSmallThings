@@ -31,7 +31,7 @@ public class DebarkerContainer extends Container {
 
         if (tileEntity != null) {
             tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(h -> {
-                addSlot(new SlotItemHandler(h, 0, 70, 31));
+                addSlot(new SlotItemHandler(h, 0, 50, 31));
                 addSlot(new SlotItemHandler(h, 0, 100, 31));
             });
         }
