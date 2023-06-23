@@ -8,4 +8,4 @@ Absolutely nothing. It's just been created.
 
 ---
 <h2>Thanks to:</h2>
-<p>Slimenamedjerry for the late night coding sessions and peer-programming</p>
+<p>Slimenamedjerry for the late night coding sessions and peer-programming <3</p>
