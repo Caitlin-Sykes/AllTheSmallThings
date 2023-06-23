@@ -27,6 +27,7 @@ public class DebarkerScreen extends ContainerScreen<DebarkerContainer> {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     protected void drawGuiContainerBackgroundLayer(MatrixStack ms, float ticks, int x, int y) {
         RenderSystem.color4f(1f,1f,1f,1f);
         this.minecraft.getTextureManager().bindTexture(GUI);

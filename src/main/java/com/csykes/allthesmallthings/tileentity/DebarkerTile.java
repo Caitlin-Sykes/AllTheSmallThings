@@ -1,7 +1,5 @@
 package com.csykes.allthesmallthings.tileentity;
 
-import com.csykes.allthesmallthings.item.ModItems;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -22,6 +20,7 @@ public class DebarkerTile extends TileEntity {
     private final ItemStackHandler itemHandler = createHandler();
     private final LazyOptional<IItemHandler> handler = LazyOptional.of(() -> itemHandler);
 
+
     public DebarkerTile(TileEntityType<?> tileEntityTypeIn) {
         super(tileEntityTypeIn);
     }
@@ -30,46 +29,66 @@ public class DebarkerTile extends TileEntity {
         this(TileEntities.DEBARKER_TILE.get());
     }
 
-    private ItemStackHandler createHandler() {
+     private ItemStackHandler createHandler() {
         return new ItemStackHandler(2) {
-            
             @Override
             protected void onContentsChanged(int slot) {
                 markDirty();
+
+               if (slot != 1) {
+                stripLogs(slot);
+               }
             }
 
             @Override
             public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
                 switch (slot) {
-                    case 0:
-                        return stack.getItem() == Items.OAK_LOG;
+                    case 0: return stack.getItem() == Items.OAK_LOG;
+                    case 1: return stack.isEmpty() || stack.getItem() == Items.STRIPPED_OAK_LOG;
                     default:
                         return false;
-                }
-            }
+                }     
+        }
+        
 
+            /**
+             * Limit of items in inventory slot
+             * Slot: inventory slot.
+             */
             @Override
             public int getSlotLimit(int slot) {
-                return 1;
+               return 64;
             }
 
+            @Nonnull
+            @Override
             public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
                 if(!isItemValid(slot, stack)) {
                     return stack;
                 }
+                
+                else {
+                    return super.insertItem(slot, stack, simulate);
+                }
+            }
 
-                return super.insertItem(slot, stack, simulate);
+            @Nonnull
+            @Override
+            public ItemStack extractItem(int slot, int amount, boolean simulate) {
+                checkItemRemoved(slot, amount);
+                return super.extractItem(slot, amount, simulate);
             }
         };
+
     }
 
-    @Override
     @Nonnull
+    @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-        
-        if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+        if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
             return handler.cast();
         }
+
         return super.getCapability(cap, side);
     }
 
@@ -97,16 +116,36 @@ public class DebarkerTile extends TileEntity {
     /**
      * A function to strip logs
      */
-    public void stripLogs() {
-        boolean hasUnstrippedLogInSlot = this.itemHandler.getStackInSlot(0).getCount() > 0 && this.itemHandler.getStackInSlot(0).getItem() == Items.OAK_LOG;
+    public void stripLogs(int slot) {
+        boolean hasUnstrippedLogInSlot = this.itemHandler.getStackInSlot(0).getCount() > 0 && this.itemHandler.getStackInSlot(0).getItem() == Items.OAK_LOG && slot == 0 && itemHandler.getStackInSlot(1).isEmpty();
 
         //If condition is true
         if (hasUnstrippedLogInSlot) {
-            int numItems = this.itemHandler.getStackInSlot(0).getCount();
 
             //Removes the number of normal logs, replaces with same number of stripped logs.
-            this.itemHandler.getStackInSlot(0).shrink(numItems);
-            this.itemHandler.insertItem(1, new ItemStack(Items.IRON_AXE), false);
+            this.itemHandler.insertItem(1, new ItemStack(Items.STRIPPED_OAK_LOG, this.itemHandler.getStackInSlot(0).getCount()), false);
+         
+          
+
+        }
+
+    }
+    /**
+     * A function to check if the item is removed
+     * @param slot - slot to check
+     * @param count - number of items to remove
+     */
+    private void checkItemRemoved(int slot, int count) {
+        
+        System.out.println("THE ITEM OF DEATH: " + this.itemHandler.getStackInSlot(1).getItem());
+        System.out.println("THE Stackcount OF DEATH: " + this.itemHandler.getStackInSlot(1).getCount());
+        System.out.println("THE Stackcountleft OF DEATH: " + this.itemHandler.getStackInSlot(0).getCount());
+        System.out.println("THE count OF DEATH: " + count);
+
+
+        if (slot == 1) {
+            this.itemHandler.getStackInSlot(0).shrink(count);
+            //(count);
         }
     }
 

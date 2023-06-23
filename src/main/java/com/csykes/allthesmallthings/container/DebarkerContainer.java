@@ -20,7 +20,7 @@ public class DebarkerContainer extends Container {
     private final TileEntity tileEntity;
     private final PlayerEntity playerEntity;
     private final IItemHandler playerInventory;
-
+    
     public DebarkerContainer(int windowId, World world, BlockPos pos, PlayerInventory pi, PlayerEntity player) {
         super(ModContainer.DEBARKER_CONTAINER.get(), windowId);
 
@@ -32,7 +32,7 @@ public class DebarkerContainer extends Container {
         if (tileEntity != null) {
             tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(h -> {
                 addSlot(new SlotItemHandler(h, 0, 50, 31));
-                addSlot(new SlotItemHandler(h, 0, 100, 31));
+                addSlot(new SlotItemHandler(h, 1, 100, 31));
             });
         }
     }
