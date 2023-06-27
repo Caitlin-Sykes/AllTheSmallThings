@@ -31,6 +31,10 @@ public class DebarkerTile extends TileEntity {
     private ItemStackHandler createHandler() {
         return new ItemStackHandler(2) {
             @Override
+            /**
+             * Function for contents changing
+             * @param slot - slot to check
+             */
             protected void onContentsChanged(int slot) {
                 markDirty();
 
@@ -39,6 +43,11 @@ public class DebarkerTile extends TileEntity {
                 }
             }
 
+            /**
+             * checks if item is valid
+             * @param slot - slot to check
+             * @param stack - item stack to check
+             */
             @Override
             public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
                 switch (slot) {
@@ -62,6 +71,12 @@ public class DebarkerTile extends TileEntity {
 
             @Nonnull
             @Override
+            /**
+             * Inserts an item
+             * @param Slot - slot to insert
+             * @param ItemStack - the item stack to enter
+             * @param simulate - whether its been changed or not
+             */
             public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
                 if (!isItemValid(slot, stack)) {
                     return stack;
