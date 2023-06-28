@@ -9,7 +9,7 @@ public class ModItemGroup {
     public static final ItemGroup ALLTHESMALLTHINGS = new ItemGroup("AllTheSmallThingsTab") {
         @Override
         public ItemStack createIcon() {
-            return new ItemStack(Items.ENDER_EYE);
+            return new ItemStack(ModItems.SAWBLADE_ITEM.get());
         }
     };
 
