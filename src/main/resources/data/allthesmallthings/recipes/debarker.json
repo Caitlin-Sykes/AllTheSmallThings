@@ -1,0 +1,22 @@
+{ 
+ "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XXX",
+    "#@#",
+    "###"
+  ],
+  "key": {
+    "@": {
+      "item": "allthesmallthings:sawblade"
+    },
+    "#": {
+      "item": "minecraft:smooth_stone"
+    },
+    "X": {
+      "item": "minecraft:dark_oak_planks"
+    }
+  },
+  "result": {
+    "item": "allthesmallthings:debarker"
+  }
+}
