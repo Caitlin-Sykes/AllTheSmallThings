@@ -10,6 +10,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tileentity.TileEntity;
@@ -48,9 +49,15 @@ public class DebarkerTile extends TileEntity {
             protected void onContentsChanged(int slot) {
                 markDirty();
 
-                if (slot != 1) {
-                    stripLogs(slot);
+                if (slot == 0) {
+                    // If slot 0 is empty, slot 1 is also set to empty
+                    if (itemHandler.getStackInSlot(0).isEmpty()) {
+                        itemHandler.setStackInSlot(1, ItemStack.EMPTY);
+                    }
                 }
+
+                stripLogs(slot);
+
             }
 
             /**
@@ -110,9 +117,6 @@ public class DebarkerTile extends TileEntity {
             @Override
             public ItemStack extractItem(int slot, int amount, boolean simulate) {
 
-                // If slot = 1 and the slot is not empty then makes a copy of the items in the
-                // stack and sets the count
-                // if not simulate then gets the stack in the slot and shrinks
                 if (slot == 1 && !itemHandler.getStackInSlot(slot).isEmpty()) {
                     ItemStack extractedStack = itemHandler.getStackInSlot(slot).copy();
                     extractedStack.setCount(Math.min(amount, extractedStack.getCount()));
@@ -121,22 +125,15 @@ public class DebarkerTile extends TileEntity {
                         checkItemRemoved(slot, extractedStack.getCount());
                     }
                     return extractedStack;
-                }
-
-                // If slot = 0 and the slot is not empty then makes a copy of the items in the
-                // stack and sets the count
-                // if not simulate then gets the stack in the slot and shrinks
-                else if (slot == 0 && !itemHandler.getStackInSlot(slot).isEmpty()) {
-                    int extractedAmount = Math.min(amount, itemHandler.getStackInSlot(slot).getCount());
-                    ItemStack extractedStack = itemHandler.getStackInSlot(slot).split(extractedAmount);
+                } else if (slot == 0 && !itemHandler.getStackInSlot(slot).isEmpty()) {
+                   ItemStack extractedStack = itemHandler.getStackInSlot(slot).copy();
+                    extractedStack.setCount(Math.min(amount, extractedStack.getCount()));
                     if (!simulate) {
-                        itemHandler.setStackInSlot(slot, itemHandler.getStackInSlot(slot));
-                        checkItemRemoved(slot, extractedAmount);
-                    }
+                        itemHandler.getStackInSlot(slot).shrink(extractedStack.getCount());
+                        checkItemRemoved(slot, extractedStack.getCount());}
                     return extractedStack;
                 }
 
-                // Return empty if doesn't fit condition
                 return ItemStack.EMPTY;
             }
 
@@ -178,6 +175,7 @@ public class DebarkerTile extends TileEntity {
 
     /**
      * A function to strip logs
+     * 
      * @param slot - slot to check
      */
     public void stripLogs(int slot) {
@@ -189,7 +187,8 @@ public class DebarkerTile extends TileEntity {
         if (hasUnstrippedLogInSlot) {
             ItemStack is = getStrippedLog(itemHandler.getStackInSlot(0));
 
-            if (itemHandler.getStackInSlot(1) != null && is.getItem() != null) {
+            if (is.getItem() != null) {
+
                 // Removes the number of normal logs, replaces with same number of stripped
                 // logs.
                 this.itemHandler.insertItem(1,
@@ -211,8 +210,9 @@ public class DebarkerTile extends TileEntity {
     private void checkItemRemoved(int slot, int count) {
         if (slot == 1) {
             ItemStack logStack = this.itemHandler.getStackInSlot(0);
-            logStack.shrink(count);
-            this.itemHandler.setStackInSlot(0, logStack);
+            if (!logStack.isEmpty()) {
+                logStack.shrink(count);
+            }
         }
     }
 
@@ -223,7 +223,7 @@ public class DebarkerTile extends TileEntity {
      * @return
      */
     public boolean isLog(ItemStack stack) {
-        return BlockTags.LOGS.contains(getBlockFromItem(stack));
+        return BlockTags.LOGS.contains(getBlockFromItem(stack)) && !stack.toString().contains("stripped");
     }
 
     /**
@@ -248,6 +248,7 @@ public class DebarkerTile extends TileEntity {
 
     /**
      * A function to get the stripped version of a block
+     * 
      * @param stack
      * @return ItemStack with the name of string, null if not found
      */
@@ -278,6 +279,7 @@ public class DebarkerTile extends TileEntity {
 
     /**
      * A function to create a new item stack based on a string name
+     * 
      * @param itemType itemType = name of item formed by @getStrippedLog
      * @return ItemStack as found item, empty if not found
      */
@@ -289,4 +291,3 @@ public class DebarkerTile extends TileEntity {
         return ItemStack.EMPTY;
     }
 }
-
