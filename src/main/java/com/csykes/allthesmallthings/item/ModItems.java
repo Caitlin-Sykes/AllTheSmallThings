@@ -6,8 +6,6 @@ import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import com.csykes.allthesmallthings.AllTheSmallThings;
-import com.csykes.allthesmallthings.item.SawbladeItem;
-
 
 public class ModItems {
 
