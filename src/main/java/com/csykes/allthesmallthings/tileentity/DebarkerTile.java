@@ -10,7 +10,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tileentity.TileEntity;
@@ -29,6 +28,7 @@ public class DebarkerTile extends TileEntity {
     private final ItemStackHandler itemHandler = createHandler();
     private final LazyOptional<IItemHandler> handler = LazyOptional.of(() -> itemHandler);
     private final String REGEX = ":(.+)_";
+    private int lastSlotValue;
 
     public DebarkerTile(TileEntityType<?> tileEntityTypeIn) {
         super(tileEntityTypeIn);
@@ -36,6 +36,16 @@ public class DebarkerTile extends TileEntity {
 
     public DebarkerTile() {
         this(TileEntities.DEBARKER_TILE.get());
+    }
+
+    // Getter
+    public int getLastSlotValue() {
+        return lastSlotValue;
+    }
+
+    // Setter
+    public void setLastSlotValue(int lastSlotValue) {
+        this.lastSlotValue = lastSlotValue;
     }
 
     private ItemStackHandler createHandler() {
@@ -54,10 +64,14 @@ public class DebarkerTile extends TileEntity {
                     if (itemHandler.getStackInSlot(0).isEmpty()) {
                         itemHandler.setStackInSlot(1, ItemStack.EMPTY);
                     }
+
+                    else {
+                        if (itemHandler.getStackInSlot(0).getCount() != itemHandler.getStackInSlot(1).getCount()) {
+                            itemHandler.getStackInSlot(1).setCount(getLastSlotValue());
+                        }
+                        stripLogs(slot);
+                    }
                 }
-
-                stripLogs(slot);
-
             }
 
             /**
@@ -102,6 +116,7 @@ public class DebarkerTile extends TileEntity {
                 }
 
                 else {
+                    setLastSlotValue(itemHandler.getStackInSlot(0).getCount());
                     return super.insertItem(slot, stack, simulate);
                 }
             }
@@ -126,11 +141,16 @@ public class DebarkerTile extends TileEntity {
                     }
                     return extractedStack;
                 } else if (slot == 0 && !itemHandler.getStackInSlot(slot).isEmpty()) {
-                   ItemStack extractedStack = itemHandler.getStackInSlot(slot).copy();
+                    ItemStack extractedStack = itemHandler.getStackInSlot(slot).copy();
                     extractedStack.setCount(Math.min(amount, extractedStack.getCount()));
                     if (!simulate) {
                         itemHandler.getStackInSlot(slot).shrink(extractedStack.getCount());
-                        checkItemRemoved(slot, extractedStack.getCount());}
+                        checkItemRemoved(slot, extractedStack.getCount());
+
+                        // Update count of slot 1 to match slot 0
+                        itemHandler.getStackInSlot(1).setCount(itemHandler.getStackInSlot(0).getCount());
+                        markDirty(); // Mark the tile entity as dirty to save changes
+                    }
                     return extractedStack;
                 }
 
@@ -290,4 +310,5 @@ public class DebarkerTile extends TileEntity {
         }
         return ItemStack.EMPTY;
     }
+
 }
