@@ -2,7 +2,7 @@ package com.csykes.allthesmallthings;
 
 import com.csykes.allthesmallthings.block.ModBlocks;
 import com.csykes.allthesmallthings.item.ModItems;
-import com.csykes.allthesmallthings.screen.DebarkerScreen;
+import com.csykes.allthesmallthings.screen.Debarker.DebarkerScreen;
 import com.csykes.allthesmallthings.container.ModContainer;
 
 import net.minecraft.block.Block;

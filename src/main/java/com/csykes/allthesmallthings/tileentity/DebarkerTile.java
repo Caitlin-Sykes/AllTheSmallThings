@@ -58,7 +58,7 @@ public class DebarkerTile extends TileEntity {
              */
             protected void onContentsChanged(int slot) {
                 markDirty();
-
+                System.out.println("onContentPingyPing");
                 if (slot == 0) {
                     // If slot 0 is empty, slot 1 is also set to empty
                     if (itemHandler.getStackInSlot(0).isEmpty()) {
@@ -66,9 +66,9 @@ public class DebarkerTile extends TileEntity {
                     }
 
                     else {
-                        if (itemHandler.getStackInSlot(0).getCount() != itemHandler.getStackInSlot(1).getCount()) {
-                            itemHandler.getStackInSlot(1).setCount(getLastSlotValue());
-                        }
+                        // if (itemHandler.getStackInSlot(0).getCount() != itemHandler.getStackInSlot(1).getCount()) {
+                        //     itemHandler.getStackInSlot(1).setCount(getLastSlotValue());
+                        // }
                         stripLogs(slot);
                     }
                 }
@@ -213,7 +213,7 @@ public class DebarkerTile extends TileEntity {
                 // logs.
                 this.itemHandler.insertItem(1,
                         new ItemStack(is.getItem(),
-                                this.itemHandler.getStackInSlot(0).getCount()),
+                                1),
                         false);
             }
 
