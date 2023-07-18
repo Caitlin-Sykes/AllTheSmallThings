@@ -66,9 +66,6 @@ public class DebarkerTile extends TileEntity {
                     }
 
                     else {
-                        // if (itemHandler.getStackInSlot(0).getCount() != itemHandler.getStackInSlot(1).getCount()) {
-                        //     itemHandler.getStackInSlot(1).setCount(getLastSlotValue());
-                        // }
                         stripLogs(slot);
                     }
                 }
@@ -200,8 +197,7 @@ public class DebarkerTile extends TileEntity {
      */
     public void stripLogs(int slot) {
         boolean hasUnstrippedLogInSlot = this.itemHandler.getStackInSlot(0).getCount() > 0
-                && isLog(this.itemHandler.getStackInSlot(0)) && slot == 0
-                && itemHandler.getStackInSlot(1).isEmpty();
+                && isLog(this.itemHandler.getStackInSlot(0)) && slot == 0;
 
         // If condition is true
         if (hasUnstrippedLogInSlot) {
@@ -213,7 +209,7 @@ public class DebarkerTile extends TileEntity {
                 // logs.
                 this.itemHandler.insertItem(1,
                         new ItemStack(is.getItem(),
-                                1),
+                                itemHandler.getStackInSlot(0).getCount()),
                         false);
             }
 

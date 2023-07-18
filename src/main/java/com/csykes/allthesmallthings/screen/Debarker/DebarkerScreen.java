@@ -30,7 +30,7 @@ public class DebarkerScreen extends ContainerScreen<DebarkerContainer> {
     protected void init() {
         super.init();
         // Adds the button
-        stripLogButton = addButton(new DebarkerButtonIcon(this.guiLeft+72, this.guiTop+29, 25, 19, button -> {
+        stripLogButton = addButton(new DebarkerButtonIcon(this.guiLeft+73, this.guiTop+30, 18, 18, button -> {
             System.out.println("Button clicked!");
         
         }));

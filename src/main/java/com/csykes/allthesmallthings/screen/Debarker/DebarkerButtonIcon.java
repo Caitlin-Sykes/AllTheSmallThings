@@ -27,6 +27,6 @@ public class DebarkerButtonIcon extends Button {
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         super.render(matrices, mouseX, mouseY, delta);
         Minecraft.getInstance().getTextureManager().bindTexture(DEBARKER_BUTTON_TEXTURE);
-        blit(matrices, this.x-2, this.y-4, 0, 0, 30, 31, 28, 25);
+        blit(matrices, this.x, this.y, 0, 0, 18, 18, 18, 18);
     }
 }
