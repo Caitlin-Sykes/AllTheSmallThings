@@ -66,7 +66,7 @@ public class DebarkerTile extends TileEntity {
                     }
 
                     else {
-                        stripLogs(slot);
+                        stripLogs();
                     }
                 }
             }
@@ -81,11 +81,12 @@ public class DebarkerTile extends TileEntity {
             public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
                 switch (slot) {
                     case 0:
-                        return (isLog(stack) == true);
+                        return (isLog(stack) == true && hasStrippedLog(stack) == true);
                     case 1:
                         return stack.isEmpty() || isStrippedLog(stack);
                     default:
                         return false;
+
                 }
             }
 
@@ -195,9 +196,9 @@ public class DebarkerTile extends TileEntity {
      * 
      * @param slot - slot to check
      */
-    public void stripLogs(int slot) {
+    public void stripLogs() {
         boolean hasUnstrippedLogInSlot = this.itemHandler.getStackInSlot(0).getCount() > 0
-                && isLog(this.itemHandler.getStackInSlot(0)) && slot == 0;
+                && isLog(this.itemHandler.getStackInSlot(0));
 
         // If condition is true
         if (hasUnstrippedLogInSlot) {
@@ -236,7 +237,7 @@ public class DebarkerTile extends TileEntity {
      * Checks if a given itemStack is a log
      * 
      * @param stack to check
-     * @return
+     * @return true if the itemStack is a log and does not contain "stripped" in the name, false otherwise
      */
     public boolean isLog(ItemStack stack) {
         return BlockTags.LOGS.contains(getBlockFromItem(stack)) && !stack.toString().contains("stripped");
@@ -273,9 +274,28 @@ public class DebarkerTile extends TileEntity {
 
         // Checks to see if an item is a log and converts
         if (isLog(stack)) {
-            return createItemStack(("minecraft:stripped_" + getTypeOfLog(blockToConvert.toString()) + "_log"));
+            try {
+                return createItemStack(("minecraft:stripped_" + getTypeOfLog(blockToConvert.toString()) + "_log"));
+            }
+
+            catch (Exception e){
+                return null;
+            }
         }
         return null;
+    }
+
+
+    /**
+     * A function to confirm whether it has a stripped log variant
+     * @param stack - itemStack to check
+     * @return true if it has a stripped log variant, false otherwise
+     */
+    private boolean hasStrippedLog(ItemStack stack) {
+        if (getStrippedLog(stack) != null) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -306,5 +326,4 @@ public class DebarkerTile extends TileEntity {
         }
         return ItemStack.EMPTY;
     }
-
 }
