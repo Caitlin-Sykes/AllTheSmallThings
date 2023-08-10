@@ -12,6 +12,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
@@ -19,15 +20,22 @@ import net.minecraft.util.ResourceLocation;
 
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.registries.ForgeRegistries;
 
-public class DebarkerTile extends TileEntity {
+public class DebarkerTile extends TileEntity implements IEnergyStorage, ITickableTileEntity {
     private final ItemStackHandler itemHandler = createHandler();
     private final LazyOptional<IItemHandler> handler = LazyOptional.of(() -> itemHandler);
     private static final String REGEX = ":(.+)_";
+    private static final int MAX_ENERGY_STORED = 1000; // Adjust this value as needed
+
+    private static int ENERGY_STORED = 1000; // Adjust this value as needed
+    private static int ENERGY_COST = 100; // Set the energy cost for each conversion
+    private int TICKS_CONVERSION = 20; // Adjust this value as needed
+    private int TICKS_COUNTER = 0;
 
     public DebarkerTile(TileEntityType<?> tileEntityTypeIn) {
         super(tileEntityTypeIn);
@@ -36,7 +44,6 @@ public class DebarkerTile extends TileEntity {
     public DebarkerTile() {
         this(TileEntities.DEBARKER_TILE.get());
     }
-
 
     @Nonnull
     @Override
@@ -60,7 +67,7 @@ public class DebarkerTile extends TileEntity {
 
             @Override
             public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
-                 switch (slot) {
+                switch (slot) {
                     case 0:
                         return (isLog(stack) && hasStrippedLog(stack));
                     case 1:
@@ -76,26 +83,30 @@ public class DebarkerTile extends TileEntity {
                 return 64;
             }
         };
+
     }
 
     public void convertLogToStripped() {
-        try {
-            ItemStack inputStack = itemHandler.getStackInSlot(0);
-        if (!inputStack.isEmpty() && itemHandler.isItemValid(0, inputStack)) {
-            ItemStack strippedStack = getStrippedVersion(inputStack);
-            if (!strippedStack.isEmpty()) {
-                int inputCount = Math.min(inputStack.getCount(), 64); // Limit to 20 logs
-                ItemStack strippedLogs = new ItemStack(strippedStack.getItem(), inputCount);
+        if (ENERGY_STORED >= ENERGY_COST) {
+            try {
+                ItemStack inputStack = itemHandler.getStackInSlot(0);
+                if (!inputStack.isEmpty() && itemHandler.isItemValid(0, inputStack)) {
+                    ItemStack strippedStack = getStrippedVersion(inputStack);
+                    if (!strippedStack.isEmpty()) {
+                        ItemStack strippedLogs = new ItemStack(strippedStack.getItem(), 1);
 
-                itemHandler.extractItem(0, inputCount, false);
-                itemHandler.insertItem(1, strippedLogs, false);
-                markDirty();
+                        itemHandler.extractItem(0, 1, false);
+                        itemHandler.insertItem(1, strippedLogs, false);
+                        ENERGY_STORED -= ENERGY_COST;
+                        markDirty();
+
+                    }
+                }
             }
-        }
-        }
-        
-        catch (Exception e) {
-            e.printStackTrace();
+
+            catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -108,7 +119,7 @@ public class DebarkerTile extends TileEntity {
                 return createItemStack(("minecraft:stripped_" + getTypeOfLog(blockToConvert.toString()) + "_log"));
             }
 
-            catch (Exception e){
+            catch (Exception e) {
                 return null;
             }
         }
@@ -130,7 +141,7 @@ public class DebarkerTile extends TileEntity {
                 return createItemStack(("minecraft:stripped_" + getTypeOfLog(blockToConvert.toString()) + "_log"));
             }
 
-            catch (Exception e){
+            catch (Exception e) {
                 return null;
             }
         }
@@ -149,6 +160,7 @@ public class DebarkerTile extends TileEntity {
 
     /**
      * A function to confirm whether it has a stripped log variant
+     * 
      * @param stack - itemStack to check
      * @return true if it has a stripped log variant, false otherwise
      */
@@ -158,7 +170,6 @@ public class DebarkerTile extends TileEntity {
         }
         return false;
     }
-
 
     /**
      * Gets the type of log using a regex pattern
@@ -191,7 +202,8 @@ public class DebarkerTile extends TileEntity {
      * Checks if a given itemStack is a log
      * 
      * @param stack to check
-     * @return true if the itemStack is a log and does not contain "stripped" in the name, false otherwise
+     * @return true if the itemStack is a log and does not contain "stripped" in the
+     *         name, false otherwise
      */
     public boolean isLog(ItemStack stack) {
         return BlockTags.LOGS.contains(getBlockFromItem(stack)) && !stack.toString().contains("stripped");
@@ -220,4 +232,119 @@ public class DebarkerTile extends TileEntity {
     public boolean isStrippedLog(ItemStack stack) {
         return stack.toString().toLowerCase().contains("stripped");
     }
+
+    /**
+     * A function to add energy
+     * 
+     * @param maxReceive - max energy to receive
+     * @param simulate
+     * @return received energy
+     */
+    @Override
+    public int receiveEnergy(int maxReceive, boolean simulate) {
+        int energyReceived = Math.min(getMaxEnergyStored() - getEnergyStored(), maxReceive);
+
+        if (!simulate) {
+            ENERGY_STORED += energyReceived;
+            markDirty();
+        }
+
+        return energyReceived;
+    }
+
+    /**
+     * A function to extract energy
+     * 
+     * @param maxExtract - maximum amount of energy to extract
+     * @param simulate
+     * @return energy extracted
+     */
+    @Override
+    public int extractEnergy(int maxExtract, boolean simulate) {
+
+        if (!canExtract()) {
+            return 0;
+        }
+
+        int energyExtracted = Math.min(ENERGY_STORED, maxExtract);
+
+        if (!simulate) {
+            ENERGY_STORED -= energyExtracted;
+            markDirty(); // Mark the tile entity as dirty to save changes to NBT
+        }
+
+        return energyExtracted;
+    }
+
+    /**
+     * A function to get the current energy stored
+     * 
+     * @return current energy_stored as int
+     */
+    @Override
+    public int getEnergyStored() {
+        return ENERGY_STORED;
+    }
+
+    /**
+     * A function to get the max energy stored
+     * 
+     * @return max energy as int
+     */
+    @Override
+    public int getMaxEnergyStored() {
+        return MAX_ENERGY_STORED;
+    }
+
+    /**
+     * A function to extract energy
+     * 
+     * @return true if energy is over 0, false otherwise
+     */
+    @Override
+    public boolean canExtract() {
+        // For example, you might check if the tile entity is active or has enough
+        // energy stored
+        return ENERGY_STORED > 0;
+    }
+
+    /**
+     * A function to determine whether it can receive energy
+     * 
+     * @return false if energy is full, true otherwise
+     */
+    @Override
+    public boolean canReceive() {
+        return !isFull();
+    }
+
+    /**
+     * A function to determine whether the energy stored is full or not
+     * 
+     * @return true if full, false otherwise
+     */
+    private boolean isFull() {
+        if (ENERGY_STORED < MAX_ENERGY_STORED) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void tick() {
+
+        System.out.println("ENERGY STORED: " + ENERGY_STORED);
+        if (world != null && !world.isRemote) {
+            // Only perform actions on the server side
+            if (ENERGY_STORED >= ENERGY_COST && canExtract()) {
+                TICKS_COUNTER++;
+
+                if (TICKS_COUNTER >= TICKS_CONVERSION) {
+                    convertLogToStripped();
+                    TICKS_CONVERSION = 0;
+                }
+            }
+        }
+    }
+
 }
