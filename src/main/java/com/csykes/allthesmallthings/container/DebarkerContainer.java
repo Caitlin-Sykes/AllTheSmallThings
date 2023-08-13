@@ -21,6 +21,14 @@ public class DebarkerContainer extends Container {
     private final PlayerEntity playerEntity;
     private final IItemHandler playerInventory;
     
+    /**
+     * Constructor
+     * @param windowId
+     * @param world
+     * @param pos
+     * @param pi
+     * @param player
+     */
     public DebarkerContainer(int windowId, World world, BlockPos pos, PlayerInventory pi, PlayerEntity player) {
         super(ModContainer.DEBARKER_CONTAINER.get(), windowId);
 
@@ -37,11 +45,26 @@ public class DebarkerContainer extends Container {
         }
     }
 
+    /**
+     * A function for if the player can interact with item
+     * @param playerIn - player entity
+     * @return boolean true if in useable distance, false otherwise
+     */
     @Override
     public boolean canInteractWith(PlayerEntity playerIn) {
         return isWithinUsableDistance(IWorldPosCallable.of(tileEntity.getWorld(), tileEntity.getPos()), playerIn, ModBlocks.DEBARKER.get());
     }
 
+    /**
+     * Add slot handlers
+     * @param handler
+     * @param index
+     * @param x
+     * @param y
+     * @param amount
+     * @param dx
+     * @return
+     */
     private int addSlotRange(IItemHandler handler, int index, int x, int y, int amount, int dx) {
         for (int i = 0; i < amount; i++) {
             addSlot(new SlotItemHandler(handler, index, x, y));
@@ -52,6 +75,18 @@ public class DebarkerContainer extends Container {
         return index;
     }
 
+    /**
+     * Add slot range
+     * @param handler
+     * @param index
+     * @param x
+     * @param y
+     * @param horAmount
+     * @param dx
+     * @param verAmount
+     * @param dy
+     * @return index of slot
+     */
     private int addSlotBox(IItemHandler handler, int index, int x, int y, int horAmount, int dx, int verAmount, int dy) {
         for (int j = 0; j < verAmount; j++) {
             index = addSlotRange(handler, index, x, y, horAmount, dx);
@@ -61,6 +96,11 @@ public class DebarkerContainer extends Container {
         return index;
     }
 
+    /**
+     * Player inventory slots
+     * @param leftCol
+     * @param topRow
+     */
     private void layoutPlayerInventorySlots(int leftCol, int topRow) {
         addSlotBox(playerInventory, 9, leftCol, topRow, 9, 18, 3, 18);
 

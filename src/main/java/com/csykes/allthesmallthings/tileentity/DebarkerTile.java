@@ -30,21 +30,33 @@ public class DebarkerTile extends TileEntity implements IEnergyStorage, ITickabl
     private final ItemStackHandler itemHandler = createHandler();
     private final LazyOptional<IItemHandler> handler = LazyOptional.of(() -> itemHandler);
     private static final String REGEX = ":(.+)_";
-    private static final int MAX_ENERGY_STORED = 1000; // Adjust this value as needed
+    
+    public static final int MAX_ENERGY_STORED = 1000; // Max energy machine can store
+    public int ENERGY_STORED = 1000; // Current energy stored
+    public static int ENERGY_COST = 100; // Energy cost for each run of the machine
+    private static int TICKS_CONVERSION = 20; // How long it waits per cycle of ticks
+    private static int TICKS_COUNTER = 0; // current tick counter
 
-    private static int ENERGY_STORED = 1000; // Adjust this value as needed
-    private static int ENERGY_COST = 100; // Set the energy cost for each conversion
-    private int TICKS_CONVERSION = 20; // Adjust this value as needed
-    private int TICKS_COUNTER = 0;
+    public static final int MAX_WIDTH_CHARGEBAR = 70; //max width of the charge bar
 
+    /**
+     * Constructor
+     * @param tileEntityTypeIn
+     */
     public DebarkerTile(TileEntityType<?> tileEntityTypeIn) {
         super(tileEntityTypeIn);
     }
 
+    /**
+     * Constructor
+     */
     public DebarkerTile() {
         this(TileEntities.DEBARKER_TILE.get());
     }
 
+    /**
+     * Capability
+     */
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
@@ -54,17 +66,19 @@ public class DebarkerTile extends TileEntity implements IEnergyStorage, ITickabl
         return super.getCapability(cap, side);
     }
 
+    /**
+     * Creates new instances of handlers
+     * @return ItemStackHandler
+     */
     private ItemStackHandler createHandler() {
         return new ItemStackHandler(2) {
-            @Override
-            protected void onContentsChanged(int slot) {
-                if (slot == 0 && isItemValid(0, this.getStackInSlot(slot)) && this.getStackInSlot(0).getCount() != 0) {
-                    // convertLogToStripped();
-                }
 
-                markDirty();
-            }
-
+            /**
+             * A function to determine if the log is valid
+             * Slot 0: Has to be a log, and has a stripped variant slot
+             * Slot 1: Has to be empty, or has to be a stripped log,
+             * @return false otherwise
+             */
             @Override
             public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
                 switch (slot) {
@@ -78,6 +92,10 @@ public class DebarkerTile extends TileEntity implements IEnergyStorage, ITickabl
                 }
             }
 
+            /**
+             * Limit number of items in machine
+             * @param return a stack
+             */
             @Override
             public int getSlotLimit(int slot) {
                 return 64;
@@ -86,18 +104,34 @@ public class DebarkerTile extends TileEntity implements IEnergyStorage, ITickabl
 
     }
 
+    /**
+     * A function to convert the logs into their stripped variant
+     */
     public void convertLogToStripped() {
+
+        //If energy stored is over or = to the energy cost
         if (ENERGY_STORED >= ENERGY_COST) {
             try {
+
+                //Gets stack of items in slot 0
                 ItemStack inputStack = itemHandler.getStackInSlot(0);
+
+                // If the input stack is not empty and the item is valid
                 if (!inputStack.isEmpty() && itemHandler.isItemValid(0, inputStack)) {
+                    //Gets stripped variant of log as ItemStack. Returns empty if cannot find it
                     ItemStack strippedStack = getStrippedVersion(inputStack);
+    
+                    //If stripped stack is not empty, gets stripped logs as new item stack, and gets one of it
                     if (!strippedStack.isEmpty()) {
                         ItemStack strippedLogs = new ItemStack(strippedStack.getItem(), 1);
 
+                        //Takes one item out of slot 0, and adds one item to slot 1
                         itemHandler.extractItem(0, 1, false);
                         itemHandler.insertItem(1, strippedLogs, false);
+
+                        //Deducts cost of machine process
                         ENERGY_STORED -= ENERGY_COST;
+                        //Saves
                         markDirty();
 
                     }
@@ -110,6 +144,11 @@ public class DebarkerTile extends TileEntity implements IEnergyStorage, ITickabl
         }
     }
 
+    /**
+     * Gets the stripped variant of a log
+     * @param stack log to check
+     * @return stripped log version or null
+     */
     private ItemStack getStrippedVersion(ItemStack stack) {
         Block blockToConvert = getBlockFromItem(stack);
 
@@ -186,12 +225,18 @@ public class DebarkerTile extends TileEntity implements IEnergyStorage, ITickabl
         return null;
     }
 
+    /**
+     * Reads block state
+     */
     @Override
     public void read(BlockState state, CompoundNBT compound) {
         itemHandler.deserializeNBT(compound.getCompound("itemHandler"));
         super.read(state, compound);
     }
 
+    /**
+     * Saves block state
+     */
     @Override
     public CompoundNBT write(CompoundNBT compound) {
         compound.put("itemHandler", itemHandler.serializeNBT());
@@ -270,7 +315,7 @@ public class DebarkerTile extends TileEntity implements IEnergyStorage, ITickabl
 
         if (!simulate) {
             ENERGY_STORED -= energyExtracted;
-            markDirty(); // Mark the tile entity as dirty to save changes to NBT
+            markDirty(); 
         }
 
         return energyExtracted;
@@ -330,10 +375,13 @@ public class DebarkerTile extends TileEntity implements IEnergyStorage, ITickabl
         return false;
     }
 
+    /**
+     * Every minecraft tick, pings this function
+     */
     @Override
     public void tick() {
 
-        System.out.println("ENERGY STORED: " + ENERGY_STORED);
+        //If world not null and is not remote
         if (world != null && !world.isRemote) {
             // Only perform actions on the server side
             if (ENERGY_STORED >= ENERGY_COST && canExtract()) {
