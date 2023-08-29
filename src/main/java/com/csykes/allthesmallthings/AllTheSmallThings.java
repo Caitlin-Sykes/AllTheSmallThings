@@ -32,7 +32,7 @@ public class AllTheSmallThings {
     MOD_EVENT_BUS.register(com.csykes.allthesmallthings.items.sawblade.StartupCommon.class);
 
     //Start of Block Registry
-
+    MOD_EVENT_BUS.register(com.csykes.allthesmallthings.debarker.StartupCommon.class);
 
 
   }
@@ -44,6 +44,7 @@ public class AllTheSmallThings {
     //Start of Item Registry
 
     //Start of Block Registry
+    MOD_EVENT_BUS.register(com.csykes.allthesmallthings.debarker.StartupClientOnly.class);
 
   }
 
