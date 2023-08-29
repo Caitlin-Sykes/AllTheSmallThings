@@ -1,104 +1,51 @@
 package com.csykes.allthesmallthings;
 
-import com.csykes.allthesmallthings.block.ModBlocks;
-import com.csykes.allthesmallthings.item.ModItems;
-import com.csykes.allthesmallthings.screen.Debarker.DebarkerScreen;
-import com.csykes.allthesmallthings.container.ModContainer;
-
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.client.gui.ScreenManager;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.InterModComms;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
-import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
-import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.Level;
 
-import com.csykes.allthesmallthings.tileentity.TileEntities;
-
-import java.util.stream.Collectors;
-
-// The value here should match an entry in the META-INF/mods.toml file
 @Mod(AllTheSmallThings.MOD_ID)
-public class AllTheSmallThings
-{
-    public static final String MOD_ID = "allthesmallthings";
+public class AllTheSmallThings {
+  // you also need to update the modid in two other places as well:
+  // build.gradle file (the version, group, and archivesBaseName parameters)
+  // resources/META-INF/mods.toml (the name, description, and version parameters)
+  public static final String MOD_ID = "allthesmallthings";
 
-    // Directly reference a log4j logger.
-    private static final Logger LOGGER = LogManager.getLogger();
+  // get a reference to the event bus for this mod; Registration events are fired
+  // on this bus.
+  public static IEventBus MOD_EVENT_BUS;
 
-    public AllTheSmallThings() {
+  public AllTheSmallThings() {
+    MOD_EVENT_BUS = FMLJavaModLoadingContext.get().getModEventBus();
+    registerCommonEvents();
+    DistExecutor.runWhenOn(Dist.CLIENT, () -> AllTheSmallThings::registerClientOnlyEvents);
+  }
 
-         // Register the setup method for modloading
-        IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
+  public static void registerCommonEvents() {
 
-        // Register the setup method for modloading
-        eventBus.addListener(this::setup);
-        // Register the enqueueIMC method for modloading
-        eventBus.addListener(this::enqueueIMC);
-        // Register the processIMC method for modloading
-        eventBus.addListener(this::processIMC);
-        // Register the doClientStuff method for modloading
-        eventBus.addListener(this::doClientStuff);
+    //Item Group Registry
+    MOD_EVENT_BUS.register(com.csykes.allthesmallthings.itemgroup.StartupCommon.class);
 
-        ModBlocks.register(eventBus);
-        ModItems.register(eventBus);
-        TileEntities.register(eventBus);
-        ModContainer.register(eventBus);
+    //Start of Item Registry
+    MOD_EVENT_BUS.register(com.csykes.allthesmallthings.items.sawblade.StartupCommon.class);
 
-        // Register ourselves for server and other game events we are interested in
-        MinecraftForge.EVENT_BUS.register(this);
-    }
+    //Start of Block Registry
 
-    private void setup(final FMLCommonSetupEvent event)
-    {
-        // some preinit code
-        LOGGER.info("HELLO FROM PREINIT");
-        LOGGER.info("DIRT BLOCK >> {}", Blocks.DIRT.getRegistryName());
-    }
 
-    private void doClientStuff(final FMLClientSetupEvent event) {
-        ScreenManager.registerFactory(ModContainer.DEBARKER_CONTAINER.get(), DebarkerScreen::new);
 
-    }
+  }
 
-    private void enqueueIMC(final InterModEnqueueEvent event)
-    {
-        // some example code to dispatch IMC to another mod
-        InterModComms.sendTo("examplemod", "helloworld", () -> { LOGGER.info("Hello world from the MDK"); return "Hello world";});
-    }
+  public static void registerClientOnlyEvents() {
+    //Item Group Registry
+    MOD_EVENT_BUS.register(com.csykes.allthesmallthings.itemgroup.StartupClientOnly.class);
 
-    private void processIMC(final InterModProcessEvent event)
-    {
-        // some example code to receive and process InterModComms from other mods
-        LOGGER.info("Got IMC {}", event.getIMCStream().
-                map(m->m.getMessageSupplier().get()).
-                collect(Collectors.toList()));
-    }
-    // You can use SubscribeEvent and let the Event Bus discover methods to call
-    @SubscribeEvent
-    public void onServerStarting(FMLServerStartingEvent event) {
-        // do something when the server starts
-        LOGGER.info("HELLO from server starting");
-    }
+    //Start of Item Registry
 
-    // You can use EventBusSubscriber to automatically subscribe events on the contained class (this is subscribing to the MOD
-    // Event bus for receiving Registry Events)
-    @Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.MOD)
-    public static class RegistryEvents {
-        @SubscribeEvent
-        public static void onBlocksRegistry(final RegistryEvent.Register<Block> blockRegistryEvent) {
-            // register a new block here
-            LOGGER.info("HELLO from Register Block");
-        }
-    }
+    //Start of Block Registry
+
+  }
+
 }

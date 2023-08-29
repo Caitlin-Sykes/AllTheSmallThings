@@ -1,8 +1,6 @@
 {
-  "item.allthesmallthings.debarker":"Debarker",
-  "block.allthesmallthings.debarker":"Debarker",
-  "screen.allthesmallthings.debarker":"Debarker",
-  "itemGroup.AllTheSmallThingsTab":"All The Small Things",
-  "item.allthesmallthings.sawblade":"Sawblade"
+  "itemGroup.allthesmallthingstab": "All The Small Things",
 
+  "item.allthesmallthings.sawblade": "Sawblade"
+  
 }
