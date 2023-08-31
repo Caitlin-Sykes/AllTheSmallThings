@@ -59,7 +59,7 @@ public class ContainerBasic extends Container {
 	private static final int TE_INVENTORY_SLOT_COUNT = TileEntityInventoryBasic.NUMBER_OF_SLOTS;  // must match TileEntityInventoryBasic.NUMBER_OF_SLOTS
 
   public static final int TILE_INVENTORY_YPOS = 20;  // the ContainerScreenBasic needs to know these so it can tell where to draw the Titles
-  public static final int PLAYER_INVENTORY_YPOS = 51;
+  public static final int PLAYER_INVENTORY_YPOS = 86;
 
   /**
    * Creates a container suitable for server side or client side
