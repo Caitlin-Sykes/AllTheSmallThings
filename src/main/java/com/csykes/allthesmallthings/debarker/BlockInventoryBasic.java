@@ -22,15 +22,10 @@ import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 
-/**
- * User: brandon3055
- * Date: 06/01/2015
- *
- * BlockInventoryBasic is a simple inventory capable of storing 9 item stacks. The block itself doesn't do much more
- * then any regular block except create a tile entity when placed, open a gui when right clicked and drop tne
- * inventory's contents when harvested. The actual storage is handled by the tile entity.
- */
 
+/**
+ * Basic block inventory
+ */
 public class BlockInventoryBasic extends ContainerBlock
 {
 	public BlockInventoryBasic()
@@ -41,47 +36,64 @@ public class BlockInventoryBasic extends ContainerBlock
 
   /**
    * Create the Tile Entity for this block.
-   * Forge has a default but I've included it anyway for clarity
-   * @return
+   * @return new tile entity
    */
   @Override
   public TileEntity createTileEntity(BlockState state, IBlockReader world) {
     return createNewTileEntity(world);
   }
 
+  /**
+   * Creates new tile entity
+   */
   @Nullable
   @Override
   public TileEntity createNewTileEntity(IBlockReader worldIn) {
     return new TileEntityInventoryBasic();
   }
 
-  // not needed if your block implements ITileEntityProvider (in this case implemented by BlockContainer), but it
-  //  doesn't hurt to include it anyway...
+  /**
+   * Returns true as it has a tile entity
+   * @param state - state of block
+   */
 	@Override
 	public boolean hasTileEntity(BlockState state)
 	{
 		return true;
 	}
 
-	// Called when the block is right clicked
-	// We use it to open the block gui when right clicked by a player
-  // Copied from ChestBlock
+	/**
+   *  Called when the block is right clicked
+   * @param BlockState state - state of the block
+   * @param World - the world
+   * @param blockPos - position of the block
+   * @param PlayerEntity - player entity
+   * @param hand - player hand
+   * @param rayTraceResult raytrace
+	*/ 
 	@Override
 	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult rayTraceResult) {
-    if (worldIn.isRemote) return ActionResultType.SUCCESS; // on client side, don't do anything
+    if (worldIn.isRemote) return ActionResultType.SUCCESS; 
 
     INamedContainerProvider namedContainerProvider = this.getContainer(state, worldIn, pos);
     if (namedContainerProvider != null) {
-      if (!(player instanceof ServerPlayerEntity)) return ActionResultType.FAIL;  // should always be true, but just in case...
+      if (!(player instanceof ServerPlayerEntity)) return ActionResultType.FAIL;
       ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity)player;
       NetworkHooks.openGui(serverPlayerEntity, namedContainerProvider, (packetBuffer)->{});
-            // (packetBuffer)->{} is just a do-nothing because we have no extra data to send
     }
     return ActionResultType.SUCCESS;
 	}
 
-  // This is where you can do something when the block is broken. In this case drop the inventory's contents
-  // Code is copied directly from vanilla eg ChestBlock, CampfireBlock
+  /**
+   * When the block is broken, drop contents.
+   * @param BlockState state - state of the block
+   * @param World - the world
+   * @param blockPos - position of the block
+   * @param newState - state of the block
+   * @param isMoving - true if moving, false otherwise.
+   * @deprecated
+   */
+  @Deprecated
   public void onReplaced(BlockState state, World world, BlockPos blockPos, BlockState newState, boolean isMoving) {
     if (state.getBlock() != newState.getBlock()) {
       TileEntity tileentity = world.getTileEntity(blockPos);
@@ -89,8 +101,7 @@ public class BlockInventoryBasic extends ContainerBlock
         TileEntityInventoryBasic tileEntityInventoryBasic = (TileEntityInventoryBasic)tileentity;
         tileEntityInventoryBasic.dropAllContents(world, blockPos);
       }
-//      worldIn.updateComparatorOutputLevel(pos, this);  if the inventory is used to set redstone power for comparators
-      super.onReplaced(state, world, blockPos, newState, isMoving);  // call it last, because it removes the TileEntity
+      super.onReplaced(state, world, blockPos, newState, isMoving); 
     }
 	}
 
@@ -108,20 +119,19 @@ public class BlockInventoryBasic extends ContainerBlock
     return 0;
   }
 
-  //---------------------------------------------------------
-
-  // render using a BakedModel (mbe30_inventory_basic.json --> mbe30_inventory_basic_model.json)
-  // required because the default (super method) is INVISIBLE for BlockContainers.
+  /**
+   * Renders the block
+   * @param iBlockState - block state
+   */
   @Override
   public BlockRenderType getRenderType(BlockState iBlockState) {
     return BlockRenderType.MODEL;
   }
 
-  // returns the shape of the block:
-  //  The image that you see on the screen (when a block is rendered) is determined by the block model (i.e. the model json file).
-  //  But Minecraft also uses a number of other "shapes" to control the interaction of the block with its environment and with the player.
-  // See  https://greyminecraftcoder.blogspot.com/2020/02/block-shapes-voxelshapes-1144.html
-  @Override
+  
+  /**
+   * Returns the shape of the block
+   */
   public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
     return CHEST_SHAPE;
   }

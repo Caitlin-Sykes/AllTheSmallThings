@@ -10,23 +10,12 @@ import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-/**
- * User: brandon3055
- * Date: 06/01/2015
- *
- * The Startup classes for this example are called during startup in the following order
- *  * Register<Block>
- *  * Register<Item>
- *  * Register<TileEntityType<?>>
- *  * Register<ContainerType<?>>
- *  See MinecraftByExample class for more information
- */
 public class StartupCommon
 {
 	public static Block blockInventoryBasic;  // this holds the unique instance of your block
 	public static BlockItem itemBlockInventoryBasic; // and the corresponding item form that block
 
-  public static TileEntityType<TileEntityInventoryBasic> tileEntityTypeMBE30;  // Holds the type of our tile entity; needed for the TileEntityData constructor
+  public static TileEntityType<TileEntityInventoryBasic> debarkerTileEntity;  // Holds the type of our tile entity; needed for the TileEntityData constructor
   public static ContainerType<ContainerBasic> containerTypeContainerBasic;
 
   @SubscribeEvent
@@ -50,11 +39,11 @@ public class StartupCommon
 
   @SubscribeEvent
   public static void onTileEntityTypeRegistration(final RegistryEvent.Register<TileEntityType<?>> event) {
-    tileEntityTypeMBE30 = TileEntityType.Builder.create(TileEntityInventoryBasic::new, blockInventoryBasic)
+    debarkerTileEntity = TileEntityType.Builder.create(TileEntityInventoryBasic::new, blockInventoryBasic)
                                                 .build(null);
                         // you probably don't need a datafixer --> null should be fine
-    tileEntityTypeMBE30.setRegistryName("allthesmallthings:debarker");
-    event.getRegistry().register(tileEntityTypeMBE30);
+    debarkerTileEntity.setRegistryName("allthesmallthings:debarker");
+    event.getRegistry().register(debarkerTileEntity);
   }
 
   @SubscribeEvent

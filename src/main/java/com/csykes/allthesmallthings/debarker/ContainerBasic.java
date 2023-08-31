@@ -32,9 +32,7 @@ public class ContainerBasic extends Container {
   }
 
   public static ContainerBasic createContainerClientSide(int windowID, PlayerInventory playerInventory, net.minecraft.network.PacketBuffer extraData) {
-    //  don't need extraData for this example; if you want you can use it to provide extra information from the server, that you can use
-    //  when creating the client container
-    //  eg String detailedDescription = extraData.readString(128);
+    
     ChestContents chestContents = ChestContents.createForClientSideContainer(TileEntityInventoryBasic.NUMBER_OF_SLOTS);
 
     // on the client side there is no parent TileEntity to communicate with, so we:
@@ -79,10 +77,12 @@ public class ContainerBasic extends Container {
     this.chestContents = chestContents;
 
 		final int SLOT_X_SPACING = 18;
-    final int SLOT_Y_SPACING = 18;
+    	final int SLOT_Y_SPACING = 18;
 		final int HOTBAR_XPOS = 8;
-		final int HOTBAR_YPOS = 109;
-		// Add the players hotbar to the gui - the [xpos, ypos] location of each item
+		final int HOTBAR_YPOS = 144;
+		
+		
+		// Add the players hotbar to the gui
 		for (int x = 0; x < HOTBAR_SLOT_COUNT; x++) {
 			int slotNumber = x;
 			addSlot(new SlotItemHandler(playerInventoryForge, slotNumber, HOTBAR_XPOS + SLOT_X_SPACING * x, HOTBAR_YPOS));
@@ -102,13 +102,10 @@ public class ContainerBasic extends Container {
 		if (TE_INVENTORY_SLOT_COUNT != chestContents.getSizeInventory()) {
 			LOGGER.warn("Mismatched slot count in ContainerBasic(" + TE_INVENTORY_SLOT_COUNT
 												  + ") and TileInventory (" + chestContents.getSizeInventory()+")");
-		}
-		final int TILE_INVENTORY_XPOS = 8;
-		// Add the tile inventory container to the gui
-		for (int x = 0; x < TE_INVENTORY_SLOT_COUNT; x++) {
-			int slotNumber = x;
-			addSlot(new Slot(chestContents, slotNumber, TILE_INVENTORY_XPOS + SLOT_X_SPACING * x, TILE_INVENTORY_YPOS));
-		}
+		}	
+			//Tile Entity Slots
+			addSlot(new Slot(chestContents, 0, 53, 31));
+			addSlot(new Slot(chestContents, 1, 107, 31));
 	}
 
 	// Vanilla calls this method every tick to make sure the player is still able to access the inventory, and if not closes the gui

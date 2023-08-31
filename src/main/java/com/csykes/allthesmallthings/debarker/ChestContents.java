@@ -2,14 +2,10 @@ package com.csykes.allthesmallthings.debarker;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.items.ItemStackHandler;
 
-import java.util.Set;
 import java.util.function.Predicate;
 
 /**
@@ -126,51 +122,64 @@ public class ChestContents implements IInventory {
     this.closeInventoryNotificationLambda = closeInventoryNotificationLambda;
   }
 
-  // ---------- These methods are used by the container to ask whether certain actions are permitted
-  //  If you need special behaviour (eg a chest can only be used by a particular player) then either modify this method
-  //    or ask the parent TileEntity.
-
+  
+/**
+ * Can be used by a player
+ */
   @Override
   public boolean isUsableByPlayer(PlayerEntity player) {
-    return canPlayerAccessInventoryLambda.test(player);  // on the client, this does nothing. on the server, ask our parent TileEntity.
+    return canPlayerAccessInventoryLambda.test(player);  
   }
 
+  /**
+   * is the item valid for the slot
+   */
   @Override
   public boolean isItemValidForSlot(int index, ItemStack stack) {
     return chestContents.isItemValid(index, stack);
   }
 
-  // ----- Methods used to inform the parent tile entity that something has happened to the contents
-  //  you can make direct calls to the parent if you like, I've used lambdas because I think it shows the separation
-  //   of responsibilities more clearly.
-
   @FunctionalInterface
-  public interface Notify {   // Some folks use Runnable, but I prefer not to use it for non-thread-related tasks
+  public interface Notify {  
     void invoke();
   }
 
+  /**
+   * Saves the contents of the block
+   */
   @Override
   public void markDirty() {
     markDirtyNotificationLambda.invoke();
   }
 
+  /**
+   * Opens the inventory
+   */
   @Override
   public void openInventory(PlayerEntity player) {
     openInventoryNotificationLambda.invoke();
   }
 
+  /**
+   * Closes the inventory
+   */
   @Override
   public void closeInventory(PlayerEntity player) {
     closeInventoryNotificationLambda.invoke();
   }
 
-  //---------These following methods are called by Vanilla container methods to manipulate the inventory contents ---
 
+  /**
+   * Gets the size of the inventory
+   */
   @Override
   public int getSizeInventory() {
     return chestContents.getSlots();
   }
 
+  /**
+   * Method for if the inventory is empty
+   */
   @Override
   public boolean isEmpty() {
     for (int i = 0; i < chestContents.getSlots(); ++i) {
@@ -179,27 +188,48 @@ public class ChestContents implements IInventory {
     return true;
   }
 
+  /**
+   * Gets the stack in a specific slot
+   * @param index - index to check
+   */
   @Override
   public ItemStack getStackInSlot(int index) {
     return chestContents.getStackInSlot(index);
   }
 
+  /**
+   * Decreases the stack size
+   * @param index - index to check
+   * @param count - number to be removed
+   */
   @Override
   public ItemStack decrStackSize(int index, int count) {
     return chestContents.extractItem(index, count, false);
   }
 
+  /**
+   * Removes a stack from the slot
+   * @param index - index to check
+   */
   @Override
   public ItemStack removeStackFromSlot(int index) {
     int maxPossibleItemStackSize = chestContents.getSlotLimit(index);
     return chestContents.extractItem(index, maxPossibleItemStackSize, false);
   }
 
+  /**
+   * Sets the number of items in a slot
+   * @param index - index to be checked
+   * @param stack - itemStack to be set to
+   */
   @Override
   public void setInventorySlotContents(int index, ItemStack stack) {
     chestContents.setStackInSlot(index, stack);
   }
 
+  /**
+   * Clears the inventory
+   */
   @Override
   public void clear() {
     for (int i = 0; i < chestContents.getSlots(); ++i) {
@@ -207,12 +237,20 @@ public class ChestContents implements IInventory {
     }
   }
 
-  // ---------
-
+  /**
+   * Handler of the chest contents
+   * @param size
+   */
   private ChestContents(int size) {
     this.chestContents = new ItemStackHandler(size);
   }
 
+  /**
+   * Method to get the chest contents
+   * @param size
+   * @param canPlayerAccessInventoryLambda
+   * @param markDirtyNotificationLambda
+   */
   private ChestContents(int size, Predicate<PlayerEntity> canPlayerAccessInventoryLambda, Notify markDirtyNotificationLambda) {
     this.chestContents = new ItemStackHandler(size);
     this.canPlayerAccessInventoryLambda = canPlayerAccessInventoryLambda;
