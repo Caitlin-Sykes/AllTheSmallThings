@@ -1,8 +1,6 @@
 package com.csykes.allthesmallthings.debarker;
 
 import net.minecraft.client.gui.ScreenManager;
-import net.minecraft.client.renderer.model.ModelResourceLocation;
-import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
