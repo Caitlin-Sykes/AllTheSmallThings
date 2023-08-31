@@ -19,17 +19,14 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 
 /**
- * User: brandon3055 & TGG
- * Date: 06/01/2015
- *
- * This is a simple tile entity that can store 9 ItemStacks
+ * Tile entity that converts normal logs to stripped ones
  */
 public class TileEntityInventoryBasic extends TileEntity implements INamedContainerProvider {
-	public static final int NUMBER_OF_SLOTS = 9;
+	public static final int NUMBER_OF_SLOTS = 2;
 
 	public TileEntityInventoryBasic()
 	{
-    super(StartupCommon.tileEntityTypeMBE30);
+    super(StartupCommon.debarkerTileEntity);
     chestContents = ChestContents.createForTileEntity(NUMBER_OF_SLOTS,
             this::canPlayerAccessInventory, this::markDirty);
 	}
@@ -131,7 +128,7 @@ public class TileEntityInventoryBasic extends TileEntity implements INamedContai
     */
 	@Override
 	public ITextComponent getDisplayName() {
-    return new TranslationTextComponent("container.minecraftbyexample.mbe30_container_registry_name");
+    return new TranslationTextComponent("container.allthesmallthings.debarker_container");
 	}
 
   /**

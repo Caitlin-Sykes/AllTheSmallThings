@@ -2,7 +2,6 @@ package com.csykes.allthesmallthings.debarker;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
@@ -31,7 +30,7 @@ public class ContainerScreenBasic extends ContainerScreen<ContainerBasic> {
 
 		// Set the width and height of the gui.  Should match the size of the texture!
 		xSize = 176;
-		ySize = 133;
+		ySize = 168;
 	}
 
   @Override
@@ -50,12 +49,8 @@ public class ContainerScreenBasic extends ContainerScreen<ContainerBasic> {
 		final float LABEL_XPOS = 5;
 		final float FONT_Y_SPACING = 12;
 		final float CHEST_LABEL_YPOS = ContainerBasic.TILE_INVENTORY_YPOS - FONT_Y_SPACING;
-    this.font.drawString(matrixStack, this.title.toString(),
-            LABEL_XPOS, CHEST_LABEL_YPOS, Color.darkGray.getRGB());  //this.font.drawString;
-
-    final float PLAYER_INV_LABEL_YPOS = ContainerBasic.PLAYER_INVENTORY_YPOS - FONT_Y_SPACING;
-    this.font.drawString(matrixStack, this.playerInventory.getDisplayName().toString(),                  ///    this.font.drawString
-            LABEL_XPOS, PLAYER_INV_LABEL_YPOS, Color.darkGray.getRGB());
+    this.font.drawString(matrixStack, "Debarker",
+            LABEL_XPOS, CHEST_LABEL_YPOS, Color.darkGray.getRGB());
   }
 
   /**
@@ -67,14 +62,7 @@ public class ContainerScreenBasic extends ContainerScreen<ContainerBasic> {
   protected void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY) {
     RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
     this.minecraft.getTextureManager().bindTexture(BACKGROUND_TEXTURE);   // this.minecraft.getTextureManager()
-
-    // width and height are the size provided to the window when initialised after creation.
-    // xSize, ySize are the expected size of the texture-? usually seems to be left as a default.
-    // The code below is typical for vanilla containers, so I've just copied that- it appears to centre the texture within
-    //  the available window
-    int edgeSpacingX = (this.width - this.xSize) / 2;
-    int edgeSpacingY = (this.height - this.ySize) / 2;
-    this.blit(matrixStack, edgeSpacingX, edgeSpacingY, 0, 0, this.xSize, this.ySize);
+    this.blit(matrixStack, this.guiLeft, this.guiTop, 0, 0, xSize, ySize);
   }
 
   // This is the resource location for the background image for the GUI
