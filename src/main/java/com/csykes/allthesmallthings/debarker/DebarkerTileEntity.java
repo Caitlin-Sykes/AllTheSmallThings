@@ -28,7 +28,7 @@ public class DebarkerTileEntity extends TileEntity implements INamedContainerPro
 	  public static final int NUMBER_OF_SLOTS = 2;
 
     public static final int MAX_ENERGY_STORED = 1000; // Max energy machine can store
-    public int ENERGY_STORED = 1000; // Current energy stored
+    public int ENERGY_STORED; // Current energy stored
     public static int ENERGY_COST = 100; // Energy cost for each run of the machine
     private static int TICKS_CONVERSION = 50; // How long it waits per cycle of ticks
     private static int TICKS_COUNTER = 0; // current tick counter
@@ -38,6 +38,7 @@ public class DebarkerTileEntity extends TileEntity implements INamedContainerPro
     super(StartupCommon.debarkerTileEntity);
     chestContents = DebarkerContents.createForTileEntity(NUMBER_OF_SLOTS,
             this::canPlayerAccessInventory, this::markDirty);
+            ENERGY_STORED = 1000;
 	}
 
 	// Return true if the given player is able to use this block. In this case it checks that
@@ -62,6 +63,8 @@ public class DebarkerTileEntity extends TileEntity implements INamedContainerPro
 		super.write(parentNBTTagCompound); // The super call is required to save and load the tileEntity's location
     CompoundNBT inventoryNBT = chestContents.serializeNBT();
     parentNBTTagCompound.put(CHESTCONTENTS_INVENTORY_TAG, inventoryNBT);
+    parentNBTTagCompound.putInt("energyStored", ENERGY_STORED); // Save energy
+
 		return parentNBTTagCompound;
 	}
 
@@ -71,6 +74,7 @@ public class DebarkerTileEntity extends TileEntity implements INamedContainerPro
 	{
 		super.read(blockState, parentNBTTagCompound); // The super call is required to save and load the tiles location
     CompoundNBT inventoryNBT = parentNBTTagCompound.getCompound(CHESTCONTENTS_INVENTORY_TAG);
+    ENERGY_STORED = parentNBTTagCompound.getInt("energyStored"); // Load energy
     chestContents.deserializeNBT(inventoryNBT);
     if (chestContents.getSizeInventory() != NUMBER_OF_SLOTS)
       throw new IllegalArgumentException("Corrupted NBT: Number of inventory slots did not match expected.");
