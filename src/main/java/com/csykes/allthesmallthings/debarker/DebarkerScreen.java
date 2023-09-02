@@ -10,9 +10,6 @@ import net.minecraft.util.text.ITextComponent;
 import java.awt.*;
 
 /**
- * User: brandon3055
- * Date: 06/01/2015
- *
  * GuiInventoryBasic is a simple gui that does nothing but draw a background image and a line of text on the screen.
  * everything else is handled by the vanilla container code.
  *
@@ -23,9 +20,9 @@ import java.awt.*;
  * Foreground layer - typically text labels
  *
  */
-public class ContainerScreenBasic extends ContainerScreen<ContainerBasic> {
+public class DebarkerScreen extends ContainerScreen<DebarkerContainer> {
 
-  public ContainerScreenBasic(ContainerBasic containerBasic, PlayerInventory playerInventory, ITextComponent title) {
+  public DebarkerScreen(DebarkerContainer containerBasic, PlayerInventory playerInventory, ITextComponent title) {
     super(containerBasic, playerInventory, title);
 
 		// Set the width and height of the gui.  Should match the size of the texture!
@@ -33,6 +30,9 @@ public class ContainerScreenBasic extends ContainerScreen<ContainerBasic> {
 		ySize = 168;
 	}
 
+  /**
+   * Renders the gui
+   */
   @Override
   public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
     this.renderBackground(matrixStack);
@@ -48,7 +48,7 @@ public class ContainerScreenBasic extends ContainerScreen<ContainerBasic> {
   protected void drawGuiContainerForegroundLayer(MatrixStack matrixStack, int mouseX, int mouseY) {
 		final float LABEL_XPOS = 5;
 		final float FONT_Y_SPACING = 12;
-		final float CHEST_LABEL_YPOS = ContainerBasic.TILE_INVENTORY_YPOS - FONT_Y_SPACING;
+		final float CHEST_LABEL_YPOS = DebarkerContainer.TILE_INVENTORY_YPOS - FONT_Y_SPACING;
     this.font.drawString(matrixStack, "Debarker",
             LABEL_XPOS, CHEST_LABEL_YPOS, Color.darkGray.getRGB());
   }

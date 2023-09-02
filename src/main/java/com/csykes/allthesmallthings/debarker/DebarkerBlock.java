@@ -26,9 +26,9 @@ import javax.annotation.Nullable;
 /**
  * Basic block inventory
  */
-public class BlockInventoryBasic extends ContainerBlock
+public class DebarkerBlock extends ContainerBlock
 {
-	public BlockInventoryBasic()
+	public DebarkerBlock()
 	{
 		super(Block.Properties.create(Material.ROCK)
           );
@@ -49,7 +49,7 @@ public class BlockInventoryBasic extends ContainerBlock
   @Nullable
   @Override
   public TileEntity createNewTileEntity(IBlockReader worldIn) {
-    return new TileEntityInventoryBasic();
+    return new DebarkerTileEntity();
   }
 
   /**
@@ -97,8 +97,8 @@ public class BlockInventoryBasic extends ContainerBlock
   public void onReplaced(BlockState state, World world, BlockPos blockPos, BlockState newState, boolean isMoving) {
     if (state.getBlock() != newState.getBlock()) {
       TileEntity tileentity = world.getTileEntity(blockPos);
-      if (tileentity instanceof TileEntityInventoryBasic) {
-        TileEntityInventoryBasic tileEntityInventoryBasic = (TileEntityInventoryBasic)tileentity;
+      if (tileentity instanceof DebarkerTileEntity) {
+        DebarkerTileEntity tileEntityInventoryBasic = (DebarkerTileEntity)tileentity;
         tileEntityInventoryBasic.dropAllContents(world, blockPos);
       }
       super.onReplaced(state, world, blockPos, newState, isMoving); 
