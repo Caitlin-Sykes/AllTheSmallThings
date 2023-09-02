@@ -1,12 +1,19 @@
 package com.csykes.allthesmallthings.debarker;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.items.ItemStackHandler;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.function.Predicate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by TGG on 4/04/2020.
@@ -26,7 +33,9 @@ import java.util.function.Predicate;
  *
  */
 
-public class ChestContents implements IInventory {
+public class DebarkerContents implements IInventory {
+
+  private static final String REGEX = ":(.+)_";
 
   /**
    * Use this constructor to create a ChestContents which is linked to its parent TileEntity.
@@ -43,10 +52,10 @@ public class ChestContents implements IInventory {
    *                                     this is TileEntity::markDirty
    * @return the new ChestContents.
    */
-  public static ChestContents createForTileEntity(int size,
+  public static DebarkerContents createForTileEntity(int size,
                                                      Predicate<PlayerEntity> canPlayerAccessInventoryLambda,
                                                      Notify markDirtyNotificationLambda) {
-     return new ChestContents(size, canPlayerAccessInventoryLambda, markDirtyNotificationLambda);
+     return new DebarkerContents(size, canPlayerAccessInventoryLambda, markDirtyNotificationLambda);
   }
 
   /**
@@ -57,8 +66,8 @@ public class ChestContents implements IInventory {
    * @param size  the max number of ItemStacks in the inventory
    * @return the new ChestContents
    */
-  public static ChestContents createForClientSideContainer(int size) {
-    return new ChestContents(size);
+  public static DebarkerContents createForClientSideContainer(int size) {
+    return new DebarkerContents(size);
   }
 
   // ----Methods used to load / save the contents to NBT
@@ -136,7 +145,15 @@ public class ChestContents implements IInventory {
    */
   @Override
   public boolean isItemValidForSlot(int index, ItemStack stack) {
-    return chestContents.isItemValid(index, stack);
+    switch (index) {
+      case 0:
+        return (isLog(stack) && hasStrippedLog(stack));
+      case 1:
+        return stack.isEmpty() || isStrippedLog(stack);
+      default:
+        return false;
+
+    }
   }
 
   @FunctionalInterface
@@ -218,6 +235,13 @@ public class ChestContents implements IInventory {
   }
 
   /**
+   * Inserts item in slot
+   */
+  public ItemStack insertItem(int index, ItemStack stack) {
+    return chestContents.insertItem(index, stack, false);
+  }
+
+  /**
    * Sets the number of items in a slot
    * @param index - index to be checked
    * @param stack - itemStack to be set to
@@ -241,7 +265,7 @@ public class ChestContents implements IInventory {
    * Handler of the chest contents
    * @param size
    */
-  private ChestContents(int size) {
+  private DebarkerContents(int size) {
     this.chestContents = new ItemStackHandler(size);
   }
 
@@ -251,7 +275,7 @@ public class ChestContents implements IInventory {
    * @param canPlayerAccessInventoryLambda
    * @param markDirtyNotificationLambda
    */
-  private ChestContents(int size, Predicate<PlayerEntity> canPlayerAccessInventoryLambda, Notify markDirtyNotificationLambda) {
+  private DebarkerContents(int size, Predicate<PlayerEntity> canPlayerAccessInventoryLambda, Notify markDirtyNotificationLambda) {
     this.chestContents = new ItemStackHandler(size);
     this.canPlayerAccessInventoryLambda = canPlayerAccessInventoryLambda;
     this.markDirtyNotificationLambda = markDirtyNotificationLambda;
@@ -278,4 +302,104 @@ public class ChestContents implements IInventory {
   private Notify closeInventoryNotificationLambda = ()->{};
 
   private final ItemStackHandler chestContents;
-}
+
+  // ------------------------->
+  // Debarker Code
+
+  /**
+     * Checks if a given itemStack is a log
+     * 
+     * @param stack to check
+     * @return true if the itemStack is a log and does not contain "stripped" in the
+     *         name, false otherwise
+     */
+    public boolean isLog(ItemStack stack) {
+        return BlockTags.LOGS.contains(getBlockFromItem(stack)) && !stack.toString().contains("stripped");
+    }
+
+    /**
+     * A function to get the block from an item
+     * 
+     * @param stack - item stack to convert
+     * @return Block
+     */
+    public static Block getBlockFromItem(ItemStack stack) {
+        return Block.getBlockFromItem(stack.getItem());
+    }
+
+    /**
+     * A function to confirm whether it has a stripped log variant
+     * 
+     * @param stack - itemStack to check
+     * @return true if it has a stripped log variant, false otherwise
+     */
+    private boolean hasStrippedLog(ItemStack stack) {
+      if (getStrippedLog(stack) != null) {
+        return true;
+      }
+      return false;
+    }
+
+    /**
+     * A function to get the stripped version of a block
+     * 
+     * @param stack
+     * @return ItemStack with the name of string, null if not found
+     */
+    private ItemStack getStrippedLog(ItemStack stack) {
+      Block blockToConvert = getBlockFromItem(stack);
+
+      // Checks to see if an item is a log and converts
+      if (isLog(stack)) {
+        try {
+          return createItemStack(("minecraft:stripped_" + getTypeOfLog(blockToConvert.toString()) + "_log"));
+        }
+
+        catch (Exception e) {
+          return null;
+        }
+      }
+      return null;
+    }
+
+     /**
+     * Gets the type of log using a regex pattern
+     * 
+     * @param block
+     * @return type of log as String or null if not found
+     */
+    public String getTypeOfLog(String block) {
+        Pattern pattern = Pattern.compile(REGEX);
+        Matcher matched = pattern.matcher(block);
+        if (matched.find()) {
+            return matched.group(1);
+        }
+        return null;
+    }
+
+
+    /**
+     * A function to create a new item stack based on a string name
+     * 
+     * @param itemType itemType = name of item formed by @getStrippedLog
+     * @return ItemStack as found item, empty if not found
+     */
+    public ItemStack createItemStack(String itemType) {
+        Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemType));
+        if (item != null) {
+            return new ItemStack(item);
+        }
+        return ItemStack.EMPTY;
+    }
+
+    /**
+     * Function to check if stripped
+     * 
+     * @param stack - item stack to check
+     * @return true if contains "stripped"
+     */
+    public boolean isStrippedLog(ItemStack stack) {
+      return stack.toString().toLowerCase().contains("stripped");
+    }
+
+  }

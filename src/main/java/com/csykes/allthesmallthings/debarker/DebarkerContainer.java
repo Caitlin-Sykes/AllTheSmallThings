@@ -25,20 +25,20 @@ import org.apache.logging.log4j.Logger;
  *   way as well, because the functions are only needed on the server side, when the TileEntity is available.
  *   On the client side, there is no TileEntity available.
  */
-public class ContainerBasic extends Container {
+public class DebarkerContainer extends Container {
 
-  public static ContainerBasic createContainerServerSide(int windowID, PlayerInventory playerInventory, ChestContents chestContents) {
-    return new ContainerBasic(windowID, playerInventory, chestContents);
+  public static DebarkerContainer createContainerServerSide(int windowID, PlayerInventory playerInventory, DebarkerContents chestContents) {
+    return new DebarkerContainer(windowID, playerInventory, chestContents);
   }
 
-  public static ContainerBasic createContainerClientSide(int windowID, PlayerInventory playerInventory, net.minecraft.network.PacketBuffer extraData) {
+  public static DebarkerContainer createContainerClientSide(int windowID, PlayerInventory playerInventory, net.minecraft.network.PacketBuffer extraData) {
     
-    ChestContents chestContents = ChestContents.createForClientSideContainer(TileEntityInventoryBasic.NUMBER_OF_SLOTS);
+    DebarkerContents chestContents = DebarkerContents.createForClientSideContainer(DebarkerTileEntity.NUMBER_OF_SLOTS);
 
     // on the client side there is no parent TileEntity to communicate with, so we:
     // 1) use a dummy inventory
     // 2) use "do nothing" lambda functions for canPlayerAccessInventory and markDirty
-    return new ContainerBasic(windowID, playerInventory, chestContents);
+    return new DebarkerContainer(windowID, playerInventory, chestContents);
   }
 
 	// must assign a slot number to each of the slots used by the GUI.
@@ -56,7 +56,7 @@ public class ContainerBasic extends Container {
 
 	private static final int VANILLA_FIRST_SLOT_INDEX = 0;
 	private static final int TE_INVENTORY_FIRST_SLOT_INDEX = VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT;
-	private static final int TE_INVENTORY_SLOT_COUNT = TileEntityInventoryBasic.NUMBER_OF_SLOTS;  // must match TileEntityInventoryBasic.NUMBER_OF_SLOTS
+	private static final int TE_INVENTORY_SLOT_COUNT = DebarkerTileEntity.NUMBER_OF_SLOTS;  // must match TileEntityInventoryBasic.NUMBER_OF_SLOTS
 
   public static final int TILE_INVENTORY_YPOS = 20;  // the ContainerScreenBasic needs to know these so it can tell where to draw the Titles
   public static final int PLAYER_INVENTORY_YPOS = 86;
@@ -67,7 +67,7 @@ public class ContainerBasic extends Container {
    * @param playerInventory the inventory of the player
    * @param chestContents the inventory stored in the chest
    */
-	private ContainerBasic(int windowID, PlayerInventory playerInventory, ChestContents chestContents) {
+	private DebarkerContainer(int windowID, PlayerInventory playerInventory, DebarkerContents chestContents) {
 	  super(StartupCommon.containerTypeContainerBasic, windowID);
     if (StartupCommon.containerTypeContainerBasic == null)
       throw new IllegalStateException("Must initialise containerBasicContainerType before constructing a ContainerBasic!");
@@ -175,6 +175,6 @@ public class ContainerBasic extends Container {
 		super.onContainerClosed(playerIn);
 	}
 
-	private ChestContents chestContents;
+	private DebarkerContents chestContents;
   private static final Logger LOGGER = LogManager.getLogger();
 }

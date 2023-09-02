@@ -14,12 +14,12 @@ public class StartupCommon
 	public static Block blockInventoryBasic;  // this holds the unique instance of your block
 	public static BlockItem itemBlockInventoryBasic; // and the corresponding item form that block
 
-  public static TileEntityType<TileEntityInventoryBasic> debarkerTileEntity;  // Holds the type of our tile entity; needed for the TileEntityData constructor
-  public static ContainerType<ContainerBasic> containerTypeContainerBasic;
+  public static TileEntityType<DebarkerTileEntity> debarkerTileEntity;  // Holds the type of our tile entity; needed for the TileEntityData constructor
+  public static ContainerType<DebarkerContainer> containerTypeContainerBasic;
 
   @SubscribeEvent
   public static void onBlocksRegistration(final RegistryEvent.Register<Block> blockRegisterEvent) {
-    blockInventoryBasic = new BlockInventoryBasic().setRegistryName("debarker");
+    blockInventoryBasic = new DebarkerBlock().setRegistryName("debarker");
     blockRegisterEvent.getRegistry().register(blockInventoryBasic);
   }
 
@@ -38,7 +38,7 @@ public class StartupCommon
 
   @SubscribeEvent
   public static void onTileEntityTypeRegistration(final RegistryEvent.Register<TileEntityType<?>> event) {
-    debarkerTileEntity = TileEntityType.Builder.create(TileEntityInventoryBasic::new, blockInventoryBasic)
+    debarkerTileEntity = TileEntityType.Builder.create(DebarkerTileEntity::new, blockInventoryBasic)
                                                 .build(null);
                         // you probably don't need a datafixer --> null should be fine
     debarkerTileEntity.setRegistryName("allthesmallthings:debarker");
@@ -48,7 +48,7 @@ public class StartupCommon
   @SubscribeEvent
   public static void registerContainers(final RegistryEvent.Register<ContainerType<?>> event)
   {
-    containerTypeContainerBasic = IForgeContainerType.create(ContainerBasic::createContainerClientSide);
+    containerTypeContainerBasic = IForgeContainerType.create(DebarkerContainer::createContainerClientSide);
     containerTypeContainerBasic.setRegistryName("debarker");
     event.getRegistry().register(containerTypeContainerBasic);
   }
