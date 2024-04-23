@@ -131,7 +131,6 @@ public class DebarkerContents implements IInventory {
     this.closeInventoryNotificationLambda = closeInventoryNotificationLambda;
   }
 
-  
 /**
  * Can be used by a player
  */

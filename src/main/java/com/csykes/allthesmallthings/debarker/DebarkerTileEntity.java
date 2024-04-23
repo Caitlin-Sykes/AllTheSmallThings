@@ -17,6 +17,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.energy.IEnergyStorage;
 
 import javax.annotation.Nullable;
@@ -24,7 +25,7 @@ import javax.annotation.Nullable;
 /**
  * Tile entity that converts normal logs to stripped ones
  */
-public class DebarkerTileEntity extends TileEntity implements INamedContainerProvider, ITickableTileEntity, IEnergyStorage  {
+public class DebarkerTileEntity extends TileEntity implements INamedContainerProvider, ITickableTileEntity, IEnergyStorage,  INBTSerializable<CompoundNBT>  {
 	  public static final int NUMBER_OF_SLOTS = 2;
 
     public static final int MAX_ENERGY_STORED = 1000; // Max energy machine can store
@@ -74,7 +75,7 @@ public class DebarkerTileEntity extends TileEntity implements INamedContainerPro
 	{
 		super.read(blockState, parentNBTTagCompound); // The super call is required to save and load the tiles location
     CompoundNBT inventoryNBT = parentNBTTagCompound.getCompound(CHESTCONTENTS_INVENTORY_TAG);
-    ENERGY_STORED = parentNBTTagCompound.getInt("energyStored"); // Load energy
+    this.ENERGY_STORED = parentNBTTagCompound.getInt("energyStored"); // Load energy
     chestContents.deserializeNBT(inventoryNBT);
     if (chestContents.getSizeInventory() != NUMBER_OF_SLOTS)
       throw new IllegalArgumentException("Corrupted NBT: Number of inventory slots did not match expected.");
@@ -90,6 +91,7 @@ public class DebarkerTileEntity extends TileEntity implements INamedContainerPro
     int tileEntityType = 42;  // arbitrary number; only used for vanilla TileEntities.  You can use it, or not, as you want.
     return new SUpdateTileEntityPacket(this.pos, tileEntityType, nbtTagCompound);
   }
+
 
   @Override
   public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
@@ -115,6 +117,8 @@ public class DebarkerTileEntity extends TileEntity implements INamedContainerPro
   {
     this.read(blockState, tag);
   }
+
+  
 
   /**
    * When this tile entity is destroyed, drop all of its contents into the world
@@ -285,7 +289,7 @@ public class DebarkerTileEntity extends TileEntity implements INamedContainerPro
    */
   @Override
   public int getEnergyStored() {
-    return ENERGY_STORED;
+    return this.ENERGY_STORED;
   }
 
   /**
