@@ -31,11 +31,8 @@ public class DebarkerBlockEntity extends BlockEntity implements IEnergyStorage, 
 
         @Override
         public boolean isItemValid(int slot, @NotNull ItemStack stack) {
-            return switch (slot) {
-                case 1 -> true;
-                case 2 -> false;
-                default -> super.isItemValid(slot, stack);
-            };
+            // TODO Handle the slots for input and output
+            return super.isItemValid(slot, stack);
         }
     };
     private LazyOptional<IItemHandler> lazyItemHandler = LazyOptional.of(() -> itemHandler);
@@ -44,7 +41,7 @@ public class DebarkerBlockEntity extends BlockEntity implements IEnergyStorage, 
     public DebarkerBlockEntity(BlockPos blockPos, BlockState blockState) {
         super(_ModBlockEntities.DEBARKER_ENTITY_TYPE.get(), blockPos, blockState);
     }
-
+//region Energy Handlers
     @Override
     public int receiveEnergy(int maxReceive, boolean simulate) {
         int energyReceived = energy;
@@ -69,7 +66,8 @@ public class DebarkerBlockEntity extends BlockEntity implements IEnergyStorage, 
     public int getMaxEnergyStored() {
         return MAX_ENERGY;
     }
-
+//endregion
+//region Items
     @Override
     public boolean canExtract() {
         return false;
@@ -80,6 +78,17 @@ public class DebarkerBlockEntity extends BlockEntity implements IEnergyStorage, 
         return true;
     }
 
+    public void drops() {
+        SimpleContainer inventory = new SimpleContainer(itemHandler.getSlots());
+        for (int i = 0; i < itemHandler.getSlots(); i++) {
+            inventory.setItem(i, itemHandler.getStackInSlot(i));
+        }
+
+        assert this.level != null;
+        Containers.dropContents(this.level, this.worldPosition, inventory);
+    }
+//endregion
+//region Capabilities
     @Override
     public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
         if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
@@ -101,15 +110,5 @@ public class DebarkerBlockEntity extends BlockEntity implements IEnergyStorage, 
         super.reviveCaps();
         lazyItemHandler = LazyOptional.of(() -> itemHandler);
     }
-
-    public void drops() {
-        SimpleContainer inventory = new SimpleContainer(itemHandler.getSlots());
-        for (int i = 0; i < itemHandler.getSlots(); i++) {
-            inventory.setItem(i, itemHandler.getStackInSlot(i));
-        }
-
-        assert this.level != null;
-        Containers.dropContents(this.level, this.worldPosition, inventory);
-    }
-
+//endregion
 }
