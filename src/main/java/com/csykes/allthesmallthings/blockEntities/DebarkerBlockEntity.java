@@ -181,8 +181,7 @@ public AbstractContainerMenu createMenu(int id, Inventory inventory, Player play
             if ((1-(db.progress/db.maxProgress))*ENERGY_REQ <= db.energy ) {
                 db.itemHandler.getStackInSlot(OUTPUT_SLOT);
                 if (isInputValid(db) && isOutputValid(db)) {
-                    if (db.progress == 0)
-                        db.energyHandler.extractEnergy(ENERGY_REQ, false);
+                    db.energyHandler.extractEnergy((ENERGY_REQ/TICKS_PER_ITEM), false);
                     if (db.progress == db.maxProgress) {
                         ItemStack inStack = db.itemHandler.getStackInSlot(INPUT_SLOT);
                         ItemStack outStack = db.itemHandler.getStackInSlot(OUTPUT_SLOT);
