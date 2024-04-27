@@ -1,9 +1,17 @@
 package com.csykes.allthesmallthings.blockEntities;
 
+import com.csykes.allthesmallthings.menus.DebarkerMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.Containers;
+import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -18,9 +26,9 @@ import org.jetbrains.annotations.Nullable;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.energy.IEnergyStorage;
 
-public class DebarkerBlockEntity extends BlockEntity implements IEnergyStorage, ICapabilityProvider {
+public class DebarkerBlockEntity extends BlockEntity implements IEnergyStorage, ICapabilityProvider, MenuProvider {
     private int energy;
-    private final ItemStackHandler itemHandler = new ItemStackHandler(3) {
+    private final ItemStackHandler itemHandler = new ItemStackHandler(2) {
         @Override
         protected void onContentsChanged(int slot) {
             setChanged();
@@ -37,9 +45,36 @@ public class DebarkerBlockEntity extends BlockEntity implements IEnergyStorage, 
     };
     private LazyOptional<IItemHandler> lazyItemHandler = LazyOptional.of(() -> itemHandler);
     private static final int MAX_ENERGY = 10000;
+    private int progress = 0;
+    private int maxProgress = 100;
+    protected final ContainerData data;
+
 
     public DebarkerBlockEntity(BlockPos blockPos, BlockState blockState) {
         super(_ModBlockEntities.DEBARKER_ENTITY_TYPE.get(), blockPos, blockState);
+        this.data = new ContainerData() {
+            @Override
+            public int get(int index) {
+                return switch (index) {
+                    case 0 -> DebarkerBlockEntity.this.progress;
+                    case 1 -> DebarkerBlockEntity.this.maxProgress;
+                    default -> 0;
+                };
+            }
+
+            @Override
+            public void set(int index, int value) {
+                switch (index) {
+                    case 0 -> DebarkerBlockEntity.this.progress = value;
+                    case 1 -> DebarkerBlockEntity.this.maxProgress = value;
+                }
+            }
+
+            @Override
+            public int getCount() {
+                return 2;
+            }
+        };
     }
 //region Energy Handlers
     @Override
@@ -78,6 +113,9 @@ public class DebarkerBlockEntity extends BlockEntity implements IEnergyStorage, 
         return true;
     }
 
+    /**
+     * Drop Items that are loaded in the block
+     */
     public void drops() {
         SimpleContainer inventory = new SimpleContainer(itemHandler.getSlots());
         for (int i = 0; i < itemHandler.getSlots(); i++) {
@@ -86,6 +124,18 @@ public class DebarkerBlockEntity extends BlockEntity implements IEnergyStorage, 
 
         assert this.level != null;
         Containers.dropContents(this.level, this.worldPosition, inventory);
+    }
+
+    @Override
+    protected void saveAdditional(CompoundTag nbt) {
+        nbt.put("inventory", itemHandler.serializeNBT());
+        super.saveAdditional(nbt);
+    }
+
+    @Override
+    public void load(CompoundTag nbt) {
+        itemHandler.deserializeNBT(nbt.getCompound("inventory"));
+        super.load(nbt);
     }
 //endregion
 //region Capabilities
@@ -106,9 +156,28 @@ public class DebarkerBlockEntity extends BlockEntity implements IEnergyStorage, 
     }
 
     @Override
-    public void reviveCaps() {
-        super.reviveCaps();
+    public void onLoad() {
+        super.onLoad();
         lazyItemHandler = LazyOptional.of(() -> itemHandler);
     }
+
+    @Override
+    public void reviveCaps() {
+        super.reviveCaps();
+    }
+//endregion
+//region Menu
+
+
+@Override
+public @NotNull Component getDisplayName() {
+    return Component.literal("Debarker");
+}
+
+@Nullable
+@Override
+public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player) {
+    return new DebarkerMenu(id, inventory, this, this.data);
+}
 //endregion
 }
