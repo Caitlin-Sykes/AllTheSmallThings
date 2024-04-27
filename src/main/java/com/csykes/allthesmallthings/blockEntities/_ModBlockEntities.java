@@ -12,6 +12,6 @@ public class _ModBlockEntities {
     public static final RegistryObject<BlockEntityType<DebarkerBlockEntity>> DEBARKER_ENTITY_TYPE = AllTheSmallThings.BLOCK_ENTITIES.register("debarker_entity",
             () -> BlockEntityType.Builder.of(DebarkerBlockEntity::new, _ModBlocks.DEBARKER.get()).build(null));
     public static void register(IEventBus modEventBus) {
-        // This method can be empty. It's used to ensure that the class is loaded and the static initializers are run.
+//        AllTheSmallThings.BLOCK_ENTITIES.getEntries().
     }
 }

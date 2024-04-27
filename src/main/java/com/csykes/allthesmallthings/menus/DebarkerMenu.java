@@ -18,7 +18,7 @@ public class DebarkerMenu extends AbstractContainerMenu {
     private final Level level;
     private final ContainerData data;
     public DebarkerMenu(int id, Inventory playerInventory, FriendlyByteBuf extraData) {
-        this(id, playerInventory, playerInventory.player.level.getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(2));
+        this(id, playerInventory, playerInventory.player.level.getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(4));
     }
 
     public DebarkerMenu(int id, Inventory playerInventory, BlockEntity entity, ContainerData data) {
@@ -106,5 +106,9 @@ public class DebarkerMenu extends AbstractContainerMenu {
         for (int i = 0; i < 9; ++i) {
             this.addSlot(new Slot(playerInventory, i, 8 + i * 18, 144));
         }
+    }
+
+    public ContainerData getData() {
+        return data;
     }
 }

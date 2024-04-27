@@ -1,8 +1,12 @@
 package com.csykes.allthesmallthings.blocks;
 
+import com.csykes.allthesmallthings.AllTheSmallThings;
 import com.csykes.allthesmallthings.blockEntities.DebarkerBlockEntity;
+import com.csykes.allthesmallthings.blockEntities._ModBlockEntities;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -29,8 +33,8 @@ public class Debarker extends Block implements EntityBlock {
 
     @Nullable
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level p_153212_, BlockState p_153213_, BlockEntityType<T> p_153214_) {
-        return EntityBlock.super.getTicker(p_153212_, p_153213_, p_153214_);
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level p_153212_, BlockState p_153213_, BlockEntityType<T> blockEntity) {
+        return blockEntity == _ModBlockEntities.DEBARKER_ENTITY_TYPE.get() ? DebarkerBlockEntity::tick : null;
     }
 
     @Override

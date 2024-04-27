@@ -18,25 +18,28 @@ public class DebarkerScreen extends AbstractContainerScreen<DebarkerMenu> {
     }
 
     @Override
+    protected void init() {
+        super.init();
+    }
+
+    @Override
     protected void renderBg(@NotNull PoseStack pPoseStack, float pPartialTick, int pMouseX, int pMouseY) {
+        renderBackground(pPoseStack);
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         int x = (width - imageWidth) / 2;
         int y = (height - imageHeight) / 2;
         RenderSystem.setShaderTexture(0, background);
-
         this.blit(pPoseStack, x, y, 0, 0, imageWidth, imageHeight);
+        pPoseStack.translate(0,0,-5);
+        fillGradient(pPoseStack, x+53, y+52, Math.round(x+53+((float) menu.getData().get(2) /menu.getData().get(3))*70) ,y+54, 0xffff0000, 0xff5500ff);
+        fill(pPoseStack,x+79, y+38, Math.round(x+79+((float) menu.getData().get(0) /(menu.getData().get(1))*18)),y+40, 0xffffffff);
 
-//        renderProgressArrow(pPoseStack, x, y);
-//        energyInfoArea.draw(pPoseStack);
-//        renderer.render(pPoseStack, x + 55, y + 15, menu.getFluidStack());
-
+        renderTooltip(pPoseStack, pMouseX, pMouseY);
     }
 
     @Override
     public void render(@NotNull PoseStack pPoseStack, int mouseX, int mouseY, float delta) {
-        renderBackground(pPoseStack);
         super.render(pPoseStack, mouseX, mouseY, delta);
-        renderTooltip(pPoseStack, mouseX, mouseY);
     }
 }
