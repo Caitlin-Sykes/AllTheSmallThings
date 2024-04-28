@@ -1,0 +1,36 @@
+name: Bundle Jar
+
+on: [push, pull_request]
+
+jobs:
+  compile:
+    name: Compile Jar
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x ./gradlew
+
+      - name: Build with Gradle
+        run: ./gradlew build
+
+      - name: Echo event details
+        run: |
+          echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
+          echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
+          echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: compiled-jars
+          path: build/libs/*.jar
+      - run: echo "☕ Jars Uploaded !"
