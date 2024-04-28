@@ -148,10 +148,6 @@ public class DebarkerBlockEntity extends BlockEntity implements ICapabilityProvi
         lazyEnergyHandler = LazyOptional.of(() -> energyHandler);
     }
 
-    @Override
-    public void reviveCaps() {
-        super.reviveCaps();
-    }
 //endregion
 //region Menu
 
@@ -163,7 +159,7 @@ public @NotNull Component getDisplayName() {
 
 @Nullable
 @Override
-public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player) {
+public AbstractContainerMenu createMenu(int id, @NotNull Inventory inventory, @NotNull Player player) {
     return new DebarkerMenu(id, inventory, this, this.data);
 }
 //endregion

@@ -18,11 +18,6 @@ public class DebarkerScreen extends AbstractContainerScreen<DebarkerMenu> {
     }
 
     @Override
-    protected void init() {
-        super.init();
-    }
-
-    @Override
     protected void renderBg(@NotNull PoseStack pPoseStack, float pPartialTick, int pMouseX, int pMouseY) {
         renderBackground(pPoseStack);
         RenderSystem.setShader(GameRenderer::getPositionTexShader);

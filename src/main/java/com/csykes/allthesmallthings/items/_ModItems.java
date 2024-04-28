@@ -9,6 +9,8 @@ import net.minecraftforge.registries.RegistryObject;
 public class _ModItems {
     public static final RegistryObject<Item> SAWBLADE = AllTheSmallThings.ITEMS.register("sawblade", Sawblade::new);
     public static final RegistryObject<Item> DEBARKER = AllTheSmallThings.ITEMS.register("debarker", DebarkerItem::new);
+
+    @SuppressWarnings({"EmptyMethod", "NeverUsed"})
     public static void register(IEventBus modEventBus) {
         // This method can be empty. It's used to ensure that the class is loaded and the static initializers are run.
     }
