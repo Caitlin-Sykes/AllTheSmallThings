@@ -6,3 +6,6 @@ Inspired by <a href="https://github.com/Lothrazar/Cyclic">Cyclic</a> and the fac
 <h2>Currently Adds</h2>
 Absolutely nothing. It's just been created. 
 
+---
+<h2>Thanks to:</h2>
+<p>Slimenamedjerry for the late night coding sessions and peer-programming <3</p>
