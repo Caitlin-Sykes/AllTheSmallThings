@@ -2,6 +2,7 @@ package com.csykes.allthesmallthings.menus;
 
 import com.csykes.allthesmallthings.blockEntities.DebarkerBlockEntity;
 import com.csykes.allthesmallthings.blocks._ModBlocks;
+import com.csykes.allthesmallthings.util.InputSlotItemHandler;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -32,7 +33,7 @@ public class DebarkerMenu extends AbstractContainerMenu {
         addPlayerHotbar(playerInventory);
 
         this.blockEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(handler -> {
-            this.addSlot(new SlotItemHandler(handler, 0, 53, 31));
+            this.addSlot(new InputSlotItemHandler(handler, 0, 53, 31));
             this.addSlot(new SlotItemHandler(handler, 1, 107, 31));
         });
 
