@@ -2,6 +2,7 @@ package com.csykes.allthesmallthings;
 
 import com.csykes.allthesmallthings.blockEntities._ModBlockEntities;
 import com.csykes.allthesmallthings.blocks._ModBlocks;
+import com.csykes.allthesmallthings.integrations.cct.ClocheInterfacePeripheralProvider;
 import com.csykes.allthesmallthings.items._ModItems;
 import com.csykes.allthesmallthings.menus.DebarkerScreen;
 import com.csykes.allthesmallthings.menus._ModMenus;
@@ -17,6 +18,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import dan200.computercraft.api.ForgeComputerCraftAPI;
 
 @Mod(AllTheSmallThings.MOD_ID)
 public class AllTheSmallThings {
@@ -47,6 +49,7 @@ public class AllTheSmallThings {
         _ModMenus.register(MOD_EVENT_BUS);
         _ModBlockEntities.register(MOD_EVENT_BUS);
         _ModBlocks.register(MOD_EVENT_BUS);
+        ForgeComputerCraftAPI.registerPeripheralProvider(new ClocheInterfacePeripheralProvider());
     }
 
     // You can use EventBusSubscriber to automatically register all static methods in the class annotated with @SubscribeEvent
