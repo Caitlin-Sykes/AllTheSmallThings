@@ -4,10 +4,14 @@ Inspired by [Cyclic](https://github.com/Lothrazar/Cyclic) and the fact I wanted 
 ---
 ![Minecraft 1.19](https://img.shields.io/badge/Minecraft%20Version-1.19-purple)
 ![Forge 41.1.0](https://img.shields.io/badge/Forge%20Version-41.1.0-red)
+![JEI 11.0.0.206](https://img.shields.io/badge/JEI%20Version-11.0.0.206-blue)
 
 
 ## Currently Adds
  + **The Debarker**, a machine that strips logs, wood, stems, and hyphanes 
+
+---
+## Depends on:
 
 ---
 ## Thanks to:

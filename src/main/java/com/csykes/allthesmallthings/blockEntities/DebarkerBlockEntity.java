@@ -1,7 +1,6 @@
 package com.csykes.allthesmallthings.blockEntities;
 
 import com.csykes.allthesmallthings.menus.DebarkerMenu;
-import com.csykes.allthesmallthings.util.ATSTRecipeProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -33,7 +32,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
-public class DebarkerBlockEntity extends BlockEntity implements ICapabilityProvider, MenuProvider, ATSTRecipeProvider {
+public class DebarkerBlockEntity extends BlockEntity implements ICapabilityProvider, MenuProvider {
     private final ItemStackHandler itemHandler = new ItemStackHandler(2) {
         @Override
         protected void onContentsChanged(int slot) {
