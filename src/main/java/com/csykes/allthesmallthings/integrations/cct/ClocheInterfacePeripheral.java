@@ -56,7 +56,7 @@ public class ClocheInterfacePeripheral implements IDynamicPeripheral {
             return MethodResult.of(null, "Running on client side, no BlockEntity available");
         }
         if (methodIndex == 0) {
-            if (blockEntity != null && (true || blockEntity.getClass().getSimpleName().equals(""))) {
+            if (blockEntity != null && (blockEntity.getClass().getSimpleName().equals("ClocheBlockEntity"))) {
                 try {
                     Field privateField = blockEntity.getClass().getDeclaredField("inventory");  // Replace 'privateFieldName' with the actual field name
                     privateField.setAccessible(true);  // Make the field accessible
