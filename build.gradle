@@ -2,6 +2,7 @@ plugins {
     id 'eclipse'
     id 'maven-publish'
     id 'net.minecraftforge.gradle' version '5.1.+'
+    id 'org.spongepowered.mixin' version '0.7.+'
 }
 
 version = '1.0.1'
@@ -161,7 +162,7 @@ dependencies {
     // that the dep is a ForgeGradle 'patcher' dependency, and its patches will be applied.
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
     minecraft 'net.minecraftforge:forge:1.19.2-43.2.0'
-
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
 //    compileOnly("libs:cc-tweaked-1.19.2-1.101.4-sources")
     compileOnly("cc.tweaked:cc-tweaked-$mc_version_cct-common-api:$cct_version")
@@ -177,7 +178,7 @@ dependencies {
 //    // at runtime, use the full JEI jar for Forge
     runtimeOnly(fg.deobf("mezz.jei:jei-${mc_version}-forge:${jei_version}"))
     runtimeOnly fg.deobf("curse.maven:mekanism-268560:3954410")
-//    runtimeOnly fg.deobf("curse.maven:immersive-engineering-231951:3963698")
+    runtimeOnly fg.deobf("curse.maven:immersive-engineering-231951:3963698")
     runtimeOnly fg.deobf("curse.maven:cc-tweaked-282001:5005332")
 }
 
