@@ -2,14 +2,15 @@
 Inspired by [Cyclic](https://github.com/Lothrazar/Cyclic) and the fact I wanted another project in my spare time, this mod seeks to add a series of small things to Minecraft.
 
 ---
-![Minecraft 1.19](https://img.shields.io/badge/Minecraft%20Version-1.19-purple)
-![Forge 41.1.0](https://img.shields.io/badge/Forge%20Version-41.1.0-red)
-![JEI 11.0.0.206](https://img.shields.io/badge/JEI%20Version-11.0.0.206-blue)
+![Minecraft 1.19.2](https://img.shields.io/badge/Minecraft%20Version-1.19-purple)
+![Forge 43.2.0](https://img.shields.io/badge/Forge%20Version-41.1.0-red)
+![CCT Version 1.103.1](https://img.shields.io/badge/JEI%20Version-11.0.0.206-blue)
+![IE Version 1.103.1](https://img.shields.io/badge/JEI%20Version-11.0.0.206-blue)
 
 
 ## Currently Adds
  + **The Debarker**, a machine that strips logs, wood, stems, and hyphanes 
-
+ + **Cloche Interface** an interface block that registers computercraft methods to interface with Immersive Engineering Garden Cloches
 ---
 ## Depends on:
 
