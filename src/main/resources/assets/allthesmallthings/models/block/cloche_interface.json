@@ -1,8 +1,10 @@
 {
     "parent": "minecraft:block/cube_column",
+    "render_type": "minecraft:translucent",
     "textures": {
         "side": "allthesmallthings:block/cloche_interface/cloche_interface_sides",
-        "up": "allthesmallthings:block/cloche_interface/cloche_interface_top",
-        "down": "allthesmallthings:block/cloche_interface/cloche_interface_bottom"
+        "down": "allthesmallthings:block/cloche_interface/cloche_interface_bottom",
+        "up": "allthesmallthings:block/cloche_interface/cloche_interface_top"
     }
 }
+
