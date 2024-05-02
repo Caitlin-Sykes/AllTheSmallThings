@@ -1,0 +1,56 @@
+{
+    "parent": "allthesmallthings:block/signage_display",
+    "overides": {
+        "elements": [
+            {
+                "name": "item_displayBlock",
+                "from": [0, 0, 6.6],
+                "to": [16, 3.2, 7.8],
+                "rotation": {"angle": -45, "axis": "y", "origin": [8, 0, 8]},
+                "faces": {
+                    "north": {"uv": [16, 11.5, 0, 16], "texture": "#1"},
+                    "east": {"uv": [0, 1.5, 1.5, 5.5], "texture": "#1"},
+                    "south": {"uv": [0, 11.5, 16, 16], "texture": "#1"},
+                    "west": {"uv": [14.5, 1.5, 16, 5.5], "texture": "#1"},
+                    "up": {"uv": [16, 7, 0, 5.5], "texture": "#1"},
+                    "down": {"uv": [16, 0, 0, 1.5], "texture": "#1"}
+                }
+            },
+            {
+                "name": "item_support_a",
+                "from": [1, 3.2, 7],
+                "to": [1.4, 6.4, 7.4],
+                "rotation": {"angle": -45, "axis": "y", "origin": [8, 0, 8]},
+                "faces": {
+                    "north": {"uv": [3.5, 7.5, 3.5, 9], "texture": "#1"},
+                    "east": {"uv": [3.5, 7.5, 3.5, 9], "texture": "#1"},
+                    "south": {"uv": [3.5, 7.5, 3.5, 9], "texture": "#1"},
+                    "west": {"uv": [3.5, 7.5, 3.5, 9], "texture": "#1"},
+                    "up": {"uv": [3.5, 7.5, 3.5, 7.5], "texture": "#1"}
+                }
+            },
+            {
+                "name": "item_support_b",
+                "from": [15, 3.2, 7],
+                "to": [15.4, 6.4, 7.4],
+                "rotation": {"angle": -45, "axis": "y", "origin": [8, 0, 8]},
+                "faces": {
+                    "north": {"uv": [0.5, 7.5, 1, 11.5], "texture": "#1"},
+                    "east": {"uv": [0, 7.5, 0.5, 11.5], "texture": "#1"},
+                    "south": {"uv": [1.5, 7.5, 2, 11.5], "texture": "#1"},
+                    "west": {"uv": [1, 7.5, 1.5, 11.5], "texture": "#1"},
+                    "up": {"uv": [1, 7.5, 0.5, 7], "texture": "#1"}
+                }
+            }
+        ],
+        "groups": [
+            0,
+            {
+                "name": "Item",
+                "origin": [8, 8, 8],
+                "color": 0,
+                "children": [1, 2, 3]
+            }
+        ]
+    }
+}

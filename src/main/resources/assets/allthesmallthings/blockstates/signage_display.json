@@ -1,0 +1,18 @@
+{
+    "variants": {
+        "facing=north": {
+            "model": "allthesmallthings:block/signage_display"
+        },
+        "facing=east": {
+            "model": "allthesmallthings:block/signage_display",
+            "y": 90
+        },
+        "facing=south": {
+            "model": "allthesmallthings:block/signage_display"
+        },
+        "facing=west": {
+            "model": "allthesmallthings:block/signage_display",
+            "y": 90
+        }
+    }
+}

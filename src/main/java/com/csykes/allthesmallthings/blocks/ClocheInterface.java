@@ -25,6 +25,7 @@ public class ClocheInterface extends Block {
     public ClocheInterface() {
         super(Properties.of(Material.STONE)
                 .sound(SoundType.STONE)
+                .noOcclusion()
         );
     }
 

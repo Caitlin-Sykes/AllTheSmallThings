@@ -1,10 +1,83 @@
 {
-    "parent": "minecraft:block/cube_column",
+	"credit": "Made with Blockbench",
     "render_type": "minecraft:translucent",
     "textures": {
-        "side": "allthesmallthings:block/cloche_interface/cloche_interface_sides",
-        "down": "allthesmallthings:block/cloche_interface/cloche_interface_bottom",
-        "up": "allthesmallthings:block/cloche_interface/cloche_interface_top"
-    }
+		"0": "allthesmallthings:block/cloche_interface/cloche_interface_bottom",
+		"1": "allthesmallthings:block/cloche_interface/cloche_interface_sides",
+		"2": "allthesmallthings:block/cloche_interface/cloche_interface_top",
+		"particle": "allthesmallthings:block/cloche_interface/cloche_interface_bottom"
+	},
+	"elements": [
+		{
+			"from": [0, 0, 0],
+			"to": [16, 9, 16],
+			"faces": {
+				"north": {"uv": [0, 7.5, 16, 16], "texture": "#1"},
+				"east": {"uv": [0, 7.5, 16, 16], "texture": "#1"},
+				"south": {"uv": [0, 7.5, 16, 16], "texture": "#1"},
+				"west": {"uv": [0, 7.5, 16, 16], "texture": "#1"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#0"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#0"}
+			}
+		},
+		{
+			"from": [0, 9, 0],
+			"to": [16, 16, 16],
+			"faces": {
+				"north": {"uv": [0, 0, 16, 7.5], "texture": "#1"},
+				"east": {"uv": [0, 0, 16, 7.5], "texture": "#1"},
+				"south": {"uv": [0, 0, 16, 7.5], "texture": "#1"},
+				"west": {"uv": [0, 0, 16, 7.5], "texture": "#1"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#2"}
+			}
+		},
+		{
+			"name": "Connector",
+			"from": [-1, 2, 5],
+			"to": [0, 7, 11],
+			"faces": {
+				"north": {"uv": [5, 9.5, 5.5, 14], "texture": "#1"},
+				"south": {"uv": [10.5, 9.5, 11, 14], "texture": "#1"},
+				"west": {"uv": [5.5, 10, 10.5, 13.5], "texture": "#1"},
+				"up": {"uv": [5, 9.5, 11, 10], "texture": "#1"},
+				"down": {"uv": [5, 13.5, 11, 14], "texture": "#1"}
+			}
+		},
+		{
+			"name": "Connector",
+			"from": [5, 2, -1],
+			"to": [11, 7, 0],
+			"faces": {
+				"north": {"uv": [5.5, 10, 10.5, 13.5], "texture": "#1"},
+				"east": {"uv": [5, 9.5, 5.5, 14], "texture": "#1"},
+				"west": {"uv": [10.5, 9.5, 11, 14], "texture": "#1"},
+				"up": {"uv": [5, 9.5, 11, 10], "rotation": 90, "texture": "#1"},
+				"down": {"uv": [5, 13.5, 11, 14], "rotation": 270, "texture": "#1"}
+			}
+		},
+		{
+			"name": "Connector",
+			"from": [5, 2, 16],
+			"to": [11, 7, 17],
+			"faces": {
+				"east": {"uv": [10.5, 9.5, 11, 14], "texture": "#1"},
+				"south": {"uv": [5.5, 10, 10.5, 13.5], "texture": "#1"},
+				"west": {"uv": [5, 9.5, 5.5, 14], "texture": "#1"},
+				"up": {"uv": [5, 9.5, 11, 10], "rotation": 270, "texture": "#1"},
+				"down": {"uv": [5, 13.5, 11, 14], "rotation": 90, "texture": "#1"}
+			}
+		},
+		{
+			"name": "Connector",
+			"from": [16, 2, 5],
+			"to": [17, 7, 11],
+			"faces": {
+				"north": {"uv": [10.5, 9.5, 11, 14], "texture": "#1"},
+				"east": {"uv": [5.5, 10, 10.5, 13.5], "texture": "#1"},
+				"south": {"uv": [5, 9.5, 5.5, 14], "texture": "#1"},
+				"up": {"uv": [5, 9.5, 11, 10], "rotation": 180, "texture": "#1"},
+				"down": {"uv": [5, 13.5, 11, 14], "rotation": 180, "texture": "#1"}
+			}
+		}
+	]
 }
-

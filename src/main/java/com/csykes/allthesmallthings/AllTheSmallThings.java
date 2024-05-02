@@ -7,6 +7,8 @@ import com.csykes.allthesmallthings.items._ModItems;
 import com.csykes.allthesmallthings.menus.DebarkerScreen;
 import com.csykes.allthesmallthings.menus._ModMenus;
 import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -58,6 +60,7 @@ public class AllTheSmallThings {
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
             MenuScreens.register(_ModMenus.DEBARKER.get(), DebarkerScreen::new);
+            ItemBlockRenderTypes.setRenderLayer(_ModBlocks.SIGNAGE_DISPLAY_BASIC.get(), RenderType.translucent());
         }
     }
 
