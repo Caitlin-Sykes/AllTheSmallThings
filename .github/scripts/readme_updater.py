@@ -23,7 +23,7 @@ def update_readme(readme_path, versions):
             new_line = re.sub(
                 r'(https://img\.shields\.io/badge/' + re.escape(version_key) +
                 r'%20Version-)\d+(\.\d+)*(-?[a-zA-Z0-9_.]*)',
-                '\g<1>' + version_value + '\g<3>', new_line
+                '\g<1>' + version_value.replace("-", "--") + '\g<3>', new_line
             )
         new_content.append(new_line)
 
