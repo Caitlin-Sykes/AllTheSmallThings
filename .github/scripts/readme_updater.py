@@ -22,14 +22,14 @@ def update_readme(readme_path, versions):
             # Match badge URLs and update the version
             new_line = re.sub(
                 r'(https://img\.shields\.io/badge/' + re.escape(version_key) +
-                r' Version-)\d+\.\d+\.\d+(-?[a-zA-Z0-9_.]*)',
-                r'\g<1>' + version_value + r'\2', new_line
+                r'%20Version-)\d+(\.\d+)*(-?[a-zA-Z0-9_.]*)',
+                '\g<1>' + version_value + '\g<3>', new_line
             )
         new_content.append(new_line)
 
+    print(new_content)
     with open(readme_path, 'w') as file:
         file.writelines(new_content)
-
 
 if __name__ == '__main__':
     properties = read_properties('gradle.properties')
