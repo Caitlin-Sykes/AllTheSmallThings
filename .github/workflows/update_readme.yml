@@ -39,11 +39,9 @@ jobs:
           git commit -m "Update README with new version" || exit 0
           git push origin update-readme-${{ github.run_id }}
 
-      - name: Open a pull request
-        uses: repo-sync/pull-request@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          pr_title: "Update README with new versions"
-          pr_body: "This PR updates the README with the latest version badges."
-          destination_branch: "1.19_dev"  # Change this if your default branch has a different name
-          source_branch: update-readme-${{ github.run_id }}
+      - name: Create Pull Request
+        run: |
+          gh pr create --title "Update README with new versions" \
+          --body "This PR updates the README with the latest version badges." \
+          --base 1.19_dev \
+          --head update-readme-${{ github.run_number }}
