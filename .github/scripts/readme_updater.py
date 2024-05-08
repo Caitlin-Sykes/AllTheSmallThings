@@ -34,10 +34,10 @@ def update_readme(readme_path, versions):
 if __name__ == '__main__':
     properties = read_properties('gradle.properties')
     versions = {
-        'Minecraft': properties.get('minecraftVersion', '1.19.2'),  # default if not in properties
-        'Forge': properties.get('forgeVersion', '43.2.0'),
-        'CCT': properties.get('cctVersion', '1.103.1'),
-        'IE': properties.get('ieVersion', '9.0.0-153')
+        'Minecraft': properties.get('mc_version', '1.19.2'),  # default if not in properties
+        'Forge': properties.get('forge_version', '43.2.0'),
+        'CCT': properties.get('cct_version', '1.103.1'),
+        'IE': properties.get('ie_version', '9.0.0-153')
     }
     print(properties)
     print(versions)
