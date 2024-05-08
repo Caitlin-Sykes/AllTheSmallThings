@@ -45,5 +45,5 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           pr_title: "Update README with new versions"
           pr_body: "This PR updates the README with the latest version badges."
-          destination_branch: "main"  # Change this if your default branch has a different name
+          destination_branch: "1.19_dev"  # Change this if your default branch has a different name
           source_branch: update-readme-${{ github.run_id }}
