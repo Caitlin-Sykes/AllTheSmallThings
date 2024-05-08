@@ -40,6 +40,8 @@ jobs:
           git push origin update-readme-${{ github.run_id }}
 
       - name: Create Pull Request
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh pr create --title "Update README with new versions" \
           --body "This PR updates the README with the latest version badges." \
