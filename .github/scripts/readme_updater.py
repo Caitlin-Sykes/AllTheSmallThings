@@ -39,4 +39,6 @@ if __name__ == '__main__':
         'CCT': properties.get('cctVersion', '1.103.1'),
         'IE': properties.get('ieVersion', '9.0.0-153')
     }
+    print(properties)
+    print(versions)
     update_readme('README.md', versions)
