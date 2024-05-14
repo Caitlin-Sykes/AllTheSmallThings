@@ -60,6 +60,7 @@ public class AllTheSmallThings {
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
             MenuScreens.register(_ModMenus.DEBARKER.get(), DebarkerScreen::new);
+            //noinspection removal
             ItemBlockRenderTypes.setRenderLayer(_ModBlocks.SIGNAGE_DISPLAY_BASIC.get(), RenderType.translucent());
         }
     }
