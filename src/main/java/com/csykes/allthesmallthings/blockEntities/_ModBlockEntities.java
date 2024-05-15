@@ -10,6 +10,9 @@ public class _ModBlockEntities {
     public static final RegistryObject<BlockEntityType<DebarkerBlockEntity>> DEBARKER_ENTITY_TYPE = AllTheSmallThings.BLOCK_ENTITIES.register("debarker_entity",
             () -> BlockEntityType.Builder.of(DebarkerBlockEntity::new, _ModBlocks.DEBARKER.get()).build(null));
 
+    public static final RegistryObject<BlockEntityType<ChipperBlockEntity>> CHIPPER_ENTITY_TYPE = AllTheSmallThings.BLOCK_ENTITIES.register("chipper_entity",
+            () -> BlockEntityType.Builder.of(ChipperBlockEntity::new, _ModBlocks.MASON_CHIPPER.get()).build(null));
+
     public static final RegistryObject<BlockEntityType<ClocheInterfaceBlockEntity>> CLOCHE_INTERFACE_ENTITY_TYPE = AllTheSmallThings.BLOCK_ENTITIES.register("cloche_interface_entity",
             () -> BlockEntityType.Builder.of(ClocheInterfaceBlockEntity::new, _ModBlocks.CLOCHE_INTERFACE.get()).build(null));
 

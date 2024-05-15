@@ -6,13 +6,19 @@ import com.csykes.allthesmallthings.integrations.cct.ClocheInterfacePeripheralPr
 import com.csykes.allthesmallthings.items._ModItems;
 import com.csykes.allthesmallthings.menus.DebarkerScreen;
 import com.csykes.allthesmallthings.menus._ModMenus;
+import com.csykes.allthesmallthings.menus.chipper.ChipperScreen;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -39,6 +45,7 @@ public class AllTheSmallThings {
      */
     public AllTheSmallThings() {
         MOD_EVENT_BUS = FMLJavaModLoadingContext.get().getModEventBus();
+        MinecraftForge.EVENT_BUS.addListener(this::onServerStarting);
         BLOCK_ENTITIES.register(MOD_EVENT_BUS);
         BLOCKS.register(MOD_EVENT_BUS);
         ITEMS.register(MOD_EVENT_BUS);
@@ -60,9 +67,29 @@ public class AllTheSmallThings {
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
             MenuScreens.register(_ModMenus.DEBARKER.get(), DebarkerScreen::new);
+            MenuScreens.register(_ModMenus.CHIPPER.get(), ChipperScreen::new);
             //noinspection removal
             ItemBlockRenderTypes.setRenderLayer(_ModBlocks.SIGNAGE_DISPLAY_BASIC.get(), RenderType.translucent());
         }
+    }
+
+    @SubscribeEvent
+    public void onServerStarting(ServerStartingEvent event) {
+        fetchRecipes(event);
+    }
+
+    public void fetchRecipes(ServerStartingEvent event) {
+//        event.getServer().getRecipeManager().getAllRecipesFor(RecipeType.SMELTING).forEach(recipe -> {
+//            ResourceLocation id = recipe.getId();
+//            System.out.println("Recipe ID: " + id);
+//            if (recipe instanceof SmeltingRecipe) {
+//                SmeltingRecipe smeltingRecipe = (SmeltingRecipe) recipe;
+//                System.out.println("Input: " + smeltingRecipe.getIngredients());
+//                System.out.println("Output: " + smeltingRecipe.getResultItem());
+//                System.out.println("Experience: " + smeltingRecipe.getExperience());
+//                System.out.println("Cooking Time: " + smeltingRecipe.getCookingTime());
+//            }
+//        });
     }
 
 }
