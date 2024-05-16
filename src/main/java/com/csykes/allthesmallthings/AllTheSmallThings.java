@@ -7,12 +7,16 @@ import com.csykes.allthesmallthings.items._ModItems;
 import com.csykes.allthesmallthings.menus.DebarkerScreen;
 import com.csykes.allthesmallthings.menus._ModMenus;
 import com.csykes.allthesmallthings.menus.chipper.ChipperScreen;
+import earth.terrarium.chipped.common.palette.Palette;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.level.block.Block;
@@ -27,6 +31,12 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import dan200.computercraft.api.ForgeComputerCraftAPI;
+import net.minecraftforge.server.ServerLifecycleHooks;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static earth.terrarium.chipped.common.palette.Palette.WARPED_FUNGUS;
 
 @Mod(AllTheSmallThings.MOD_ID)
 public class AllTheSmallThings {
@@ -79,17 +89,7 @@ public class AllTheSmallThings {
     }
 
     public void fetchRecipes(ServerStartingEvent event) {
-//        event.getServer().getRecipeManager().getAllRecipesFor(RecipeType.SMELTING).forEach(recipe -> {
-//            ResourceLocation id = recipe.getId();
-//            System.out.println("Recipe ID: " + id);
-//            if (recipe instanceof SmeltingRecipe) {
-//                SmeltingRecipe smeltingRecipe = (SmeltingRecipe) recipe;
-//                System.out.println("Input: " + smeltingRecipe.getIngredients());
-//                System.out.println("Output: " + smeltingRecipe.getResultItem());
-//                System.out.println("Experience: " + smeltingRecipe.getExperience());
-//                System.out.println("Cooking Time: " + smeltingRecipe.getCookingTime());
-//            }
-//        });
+        Palette.valueOf("STONE");
     }
 
 }

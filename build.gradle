@@ -169,7 +169,7 @@ dependencies {
 
 
 //    JEI
-    runtimeOnly(fg.deobf("mezz.jei:jei-${mc_version}-forge:${jei_version}"))
+    implementation(fg.deobf("mezz.jei:jei-${mc_version}-forge:${jei_version}"))
 //    Mekanism
     runtimeOnly fg.deobf("curse.maven:mekanism-268560:3954410")
 //    Immersive Engineering
@@ -182,8 +182,8 @@ dependencies {
 
 //  Chipped
     implementation fg.deobf("curse.maven:chipped-456956:4558849")
-    implementation fg.deobf("curse.maven:ctm-267602:4393695")
-    implementation fg.deobf("curse.maven:resourceful-lib-570073:4477753")
+    runtimeOnly fg.deobf("curse.maven:ctm-267602:4393695")
+    runtimeOnly fg.deobf("curse.maven:resourceful-lib-570073:4477753")
 
 
 }
