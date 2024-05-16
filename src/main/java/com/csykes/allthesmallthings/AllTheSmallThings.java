@@ -1,18 +1,24 @@
 package com.csykes.allthesmallthings;
 
+import com.csykes.allthesmallthings.blockEntities.DynamicPlankBlockEntity;
 import com.csykes.allthesmallthings.blockEntities._ModBlockEntities;
 import com.csykes.allthesmallthings.blocks._ModBlocks;
 import com.csykes.allthesmallthings.integrations.cct.ClocheInterfacePeripheralProvider;
 import com.csykes.allthesmallthings.items._ModItems;
 import com.csykes.allthesmallthings.menus.DebarkerScreen;
 import com.csykes.allthesmallthings.menus._ModMenus;
+import com.csykes.allthesmallthings.renderer.DynamicPlankBlockEntityRenderer;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -62,6 +68,11 @@ public class AllTheSmallThings {
             MenuScreens.register(_ModMenus.DEBARKER.get(), DebarkerScreen::new);
             ItemBlockRenderTypes.setRenderLayer(_ModBlocks.SIGNAGE_DISPLAY_BASIC.get(), RenderType.translucent());
         }
-    }
+        
+        @SubscribeEvent()
+        public static void RegisterRenderers(EntityRenderersEvent.RegisterRenderers evnt) {
+            evnt.registerBlockEntityRenderer(_ModBlockEntities.DYNAMIC_PLANK_ENTITY_TYPE.get(), DynamicPlankBlockEntityRenderer::new);
 
+        }
+    }
 }

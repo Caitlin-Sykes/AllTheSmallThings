@@ -1,0 +1,20 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "###",
+        "#R#",
+        "###"
+    ],
+    "key": {
+        "#": {
+            "item": "minecraft:oak_planks"
+        },
+        "R": {
+            "item": "minecraft:purple_dye"
+        }
+    },
+    "result": {
+        "item": "allthesmallthings:dynamic_plank",
+        "count": 8
+    }
+}
